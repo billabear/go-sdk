@@ -1,0 +1,3975 @@
+openapi: 3.0.0
+info:
+  title: BillaBear
+  description: The REST API provided by BillaBear
+  contact:
+    name: API Support
+    url: http://www.billabear.com/support
+    email: support@billabear.com
+  license:
+    name: FSL
+  version: 1.0.0
+servers:
+- url: "https://{customerId}.billabear.cloud/api/v1"
+  variables:
+    customerId:
+      description: Customer ID assigned by the service provider
+      default: demo
+security:
+- ApiKeyAuth: []
+tags:
+- name: Billing
+paths:
+  /customer:
+    get:
+      tags:
+      - Customers
+      summary: List
+      description: List all customers
+      operationId: getAllCustomers
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: email
+        in: query
+        description: The email to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: country
+        in: query
+        description: The country code to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: reference
+        in: query
+        description: The reference to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: external_reference
+        in: query
+        description: The external reference to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Customers
+      summary: Create
+      description: Create a customer
+      operationId: createCustomer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        "201":
+          description: The customer that was just created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "400":
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_400'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}:
+    get:
+      tags:
+      - Customers
+      summary: Detail
+      description: Info for a specific customer
+      operationId: getCustomerById
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Customers
+      summary: Update
+      description: Update a customer
+      operationId: updateCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Customer'
+        required: true
+      responses:
+        "202":
+          description: The customer that has been updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customer'
+        "400":
+          $ref: '#/paths/~1customer/post/responses/400'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/voucher:
+    post:
+      tags:
+      - Customers
+      summary: Apply voucher
+      description: Apply Voucher to Customer
+      operationId: applyVoucherToCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoucherCode'
+        required: true
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/disable:
+    post:
+      tags:
+      - Customers
+      summary: Disable Customer
+      description: Disable customer
+      operationId: disableCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/enable:
+    post:
+      tags:
+      - Customers
+      summary: Enable Customer
+      description: Enable a customer
+      operationId: enableCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/limits:
+    get:
+      tags:
+      - Customers
+      summary: Fetch Customer Limits
+      description: Limits for a specific customer
+      operationId: getCustomerLimitsById
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/refund:
+    get:
+      tags:
+      - Customers
+      - Refunds
+      summary: List Customer Refunds
+      description: List Customer Refund
+      operationId: getRefundsForCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: The name to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of refunds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/payment:
+    get:
+      tags:
+      - Customers
+      - Payments
+      summary: List Customer Payments
+      description: List Customer Payment
+      operationId: getPaymentsForCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: The name to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of payments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_3'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/invoices:
+    get:
+      tags:
+      - Customers
+      - Invoices
+      - Payments
+      summary: List Customer Invoices
+      description: List Customer Invoices
+      operationId: getInvoicesForCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of invoices
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_4'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/payment-methods/frontend-payment-token:
+    get:
+      tags:
+      - PaymentDetails
+      summary: Start Frontend Detail Collection
+      description: Start frontend payment details
+      operationId: startFrontendPaymentDetails
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FrontendToken'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - PaymentDetails
+      summary: Complete Frontend Detail Collection
+      description: Complete frontend payment details
+      operationId: completeFrontendPaymentDetails
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FrontendToken'
+        required: true
+      responses:
+        "201":
+          description: The payment details that were created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetails'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/payment-methods/{paymentDetailsId}:
+    delete:
+      tags:
+      - PaymentDetails
+      summary: Delete With Customer
+      description: Delete Payment Details
+      operationId: deletePaymentDetailsCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: paymentDetailsId
+        in: path
+        description: The id of the payment details
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payment-methods/{paymentDetailsId}:
+    get:
+      tags:
+      - PaymentDetails
+      summary: Fetch
+      description: Fetch the payment cards
+      operationId: getPaymentDetails
+      parameters:
+      - name: paymentDetailsId
+        in: path
+        description: The id of the payment details
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentDetails'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+      - PaymentDetails
+      summary: Delete
+      description: Delete Payment Details
+      operationId: deletePaymentDetails
+      parameters:
+      - name: paymentDetailsId
+        in: path
+        description: The id of the payment details
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/payment-methods:
+    get:
+      tags:
+      - Customers
+      - PaymentDetails
+      summary: List Customer's Payment Details
+      description: |-
+        List all customers
+        <br><br>Added in version 1.1
+      operationId: listPaymentDetails
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of payment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/payment-methods/{paymentDetailsId}/default:
+    post:
+      tags:
+      - PaymentDetails
+      summary: Make Default With Customer
+      description: Delete Payment Details
+      operationId: makeDefaultPaymentDetailsCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: paymentDetailsId
+        in: path
+        description: The id of the payment details
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payment-methods/{paymentDetailsId}/default:
+    post:
+      tags:
+      - PaymentDetails
+      summary: Make Default
+      description: Delete Payment Details
+      operationId: makeDefaultPaymentDetails
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: paymentDetailsId
+        in: path
+        description: The id of the payment details
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/subscription/start:
+    post:
+      tags:
+      - Subscriptions
+      summary: Create Subscription
+      description: Create subscription for a customer
+      operationId: createSubscription
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscription_start_body'
+        required: true
+      responses:
+        "201":
+          description: The subscription that has been started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        "402":
+          $ref: '#/paths/~1invoice~1%7BinvoiceId%7D~1charge/post/responses/200'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "406":
+          description: Customer has no payment details to be use
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/subscription/trial:
+    post:
+      tags:
+      - Subscriptions
+      summary: Start Trial Subscription For Customer
+      description: Start subscription for a customer
+      operationId: startTrial
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscription_trial_body'
+        required: true
+      responses:
+        "201":
+          description: The trial subscription that has been started
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/subscription:
+    get:
+      tags:
+      - Subscriptions
+      - Customers
+      summary: List Customer Subscriptions
+      description: List all customer subscriptions<br><br><strong>Since 1.1</strong>
+      operationId: getForCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of subscriptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/subscription/active:
+    get:
+      tags:
+      - Subscriptions
+      - Customers
+      summary: List Customer Active Subscriptions
+      description: List all Active customer subscriptions
+      operationId: getActiveForCustomer
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of subscriptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payment:
+    get:
+      tags:
+      - Payments
+      summary: List
+      description: List all payment
+      operationId: listPayment
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: The name to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of payments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_7'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /payment/{paymentId}/refund:
+    post:
+      tags:
+      - Payments
+      summary: Refund Payment
+      description: Issue a refund for payment
+      operationId: refundPayment
+      parameters:
+      - name: paymentId
+        in: path
+        description: The id of the payment
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueRefundPayment'
+        required: true
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "406":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /refund:
+    get:
+      tags:
+      - Refunds
+      summary: List
+      description: List all refund
+      operationId: listRefund
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: The name to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of refunds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_2'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /refund/{refundId}:
+    get:
+      tags:
+      - Refunds
+      summary: Detail
+      description: Info for a specific Refund
+      operationId: showRefundById
+      parameters:
+      - name: refundId
+        in: path
+        description: The id of the refund
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Refund'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /product:
+    get:
+      tags:
+      - Products
+      summary: List
+      description: List all products
+      operationId: listProduct
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: name
+        in: query
+        description: The name to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of products
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_8'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Products
+      summary: Create
+      description: Create a product
+      operationId: createProduct
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Product'
+        required: true
+      responses:
+        "201":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /product/{productId}:
+    get:
+      tags:
+      - Products
+      summary: Detail
+      description: Info for a specific product
+      operationId: showProductById
+      parameters:
+      - name: productId
+        in: path
+        description: The id of the product to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+      - Products
+      summary: Update
+      description: Update a product
+      operationId: updateProduct
+      parameters:
+      - name: productId
+        in: path
+        description: The id of the product to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "202":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /product/{productId}/price:
+    get:
+      tags:
+      - Prices
+      summary: List
+      description: List all prices
+      operationId: listPrice
+      parameters:
+      - name: productId
+        in: path
+        description: The id of the product to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of prices for a product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_9'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Prices
+      summary: Create
+      description: Create a price
+      operationId: createPrice
+      parameters:
+      - name: productId
+        in: path
+        description: The id of the product to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Price'
+        required: true
+      responses:
+        "201":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription:
+    get:
+      tags:
+      - Subscriptions
+      summary: List
+      description: List all subscriptions
+      operationId: listSubscriptions
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of subscriptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_6'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/plans:
+    get:
+      tags:
+      - Subscriptions
+      summary: List Subscription Plans
+      description: List all subscriptions plans
+      operationId: listSubscriptionPlans
+      parameters:
+      - name: limit
+        in: query
+        description: How many items to return at one time (max 100)
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: integer
+          format: int32
+      - name: last_key
+        in: query
+        description: The key to be used in pagination to say what the last key of
+          the previous page was
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: A paged array of subscriptions plans
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_10'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}:
+    get:
+      tags:
+      - Subscriptions
+      summary: Detail
+      description: Info for a specific subscription
+      operationId: showSubscriptionById
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}/seats/add:
+    post:
+      tags:
+      - Subscriptions
+      - Customers
+      summary: Add Seats
+      description: Adds seats to a per seat subscription<br><br><strong>Since 1.1.4</strong>
+      operationId: addSeatsSubscriptions
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/seats_add_body'
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}/seats/remove:
+    post:
+      tags:
+      - Subscriptions
+      - Customers
+      summary: Remove Seats
+      description: Remove seats to a per seat subscription<br><br><strong>Since 1.1.4</strong>
+      operationId: removeSeatsSubscriptions
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/seats_remove_body'
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}/cancel:
+    post:
+      tags:
+      - Subscriptions
+      summary: Cancel Subscription
+      description: Info for a specific subscription
+      operationId: cancelSubscription
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscriptionId_cancel_body'
+        required: true
+      responses:
+        "202":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}/extend:
+    post:
+      tags:
+      - Subscriptions
+      summary: Extend Trial Subscription
+      description: Extend a trial subscription so it's converted from a trial to a
+        normal subscription.
+      operationId: extendTrial
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscriptionId_extend_body'
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}/plan:
+    post:
+      tags:
+      - Subscriptions
+      summary: Change Subscription Plan
+      description: Change the subscription plan for a customer
+      operationId: customerChangeSubscriptionPlan
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscriptionId_plan_body'
+        required: true
+      responses:
+        "202":
+          description: Subscription
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Subscription'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /subscription/{subscriptionId}/price:
+    post:
+      tags:
+      - Subscriptions
+      summary: Change Price
+      description: Changes the price being used for a price. Useful for changing pricing
+        schedule or just price.
+      operationId: changeSubscriptionPrice
+      parameters:
+      - name: subscriptionId
+        in: path
+        description: The id of the subscription to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/subscriptionId_price_body'
+        required: true
+      responses:
+        "200":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_11'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /checkout:
+    post:
+      tags:
+      - Checkout
+      summary: Create Checkout
+      description: Create checkout<br><br><strong>Since 2024.01</strong>
+      operationId: createCheckout
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/checkout_body'
+        required: true
+      responses:
+        "201":
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_201'
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /invoice/{invoiceId}/charge:
+    post:
+      tags:
+      - Payments
+      - Invoices
+      summary: Charge Invoice
+      description: Attempts to charge a card that is on file for the invoice amount
+      operationId: chargeInvoice
+      parameters:
+      - name: invoiceId
+        in: path
+        description: The id of the invoice
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Payment response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_12'
+        "402":
+          $ref: '#/paths/~1invoice~1%7BinvoiceId%7D~1charge/post/responses/200'
+        "404":
+          description: Null response
+          content:
+            application/json:
+              schema:
+                type: string
+                nullable: true
+                x-content-type: application/json
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /invoice/{invoiceId}/download:
+    get:
+      tags:
+      - Payments
+      - Invoices
+      summary: Download Invoice
+      description: Returns the pdf blob for the invoice
+      operationId: downloadInvoice
+      parameters:
+      - name: invoiceId
+        in: path
+        description: The id of the invoice
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+                x-content-type: application/pdf
+  /receipt/{receiptId}/download:
+    get:
+      tags:
+      - Payments
+      - Receipt
+      summary: Download Receipt
+      description: Returns the pdf blob for the Receipt
+      operationId: downloadReceipt
+      parameters:
+      - name: receipt
+        in: path
+        description: The id of the receipt
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The receipt PDF
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+                x-content-type: application/pdf
+components:
+  schemas:
+    Address:
+      required:
+      - country
+      type: object
+      properties:
+        company_name:
+          type: string
+          example: Humbly Arrogant
+        street_line_one:
+          type: string
+        street_line_two:
+          type: string
+        city:
+          type: string
+        region:
+          type: string
+        country:
+          type: string
+          example: GB
+        postcode:
+          type: string
+      example:
+        country: GB
+        street_line_one: street_line_one
+        city: city
+        company_name: Humbly Arrogant
+        postcode: postcode
+        street_line_two: street_line_two
+        region: region
+    Customer:
+      required:
+      - email
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          example: iain.cambridge@example.org
+        tax_number:
+          type: string
+          description: The tax number for the customer <strong>Since 1.1</strong>
+          nullable: true
+          example: GB459324
+        standard_tax_rate:
+          type: float
+          description: The tax rate for the customer on for standard services a <strong>Since
+            1.1</strong>
+          nullable: true
+          example: "15"
+        digital_tax_rate:
+          type: float
+          description: The tax rate for the customer on digital services <strong>Since
+            1.1</strong>
+          nullable: true
+          example: "19.5"
+        billing_type:
+          type: string
+          description: Choice between card and invoice
+          nullable: true
+          example: card
+          enum:
+          - card
+          - invoice
+        type:
+          type: string
+          description: Choice between 'individual' and 'business'. When not provided
+            'individual' is used. <strong>Since 1.1</strong>
+          nullable: true
+          example: business
+          enum:
+          - individual
+          - business
+        reference:
+          type: string
+          example: internal-id
+        external_reference:
+          type: string
+        address:
+          $ref: '#/components/schemas/Address'
+        locale:
+          type: string
+          description: Defaults to 'en' if not sent.
+          nullable: true
+          example: en
+        brand:
+          type: string
+          description: Defaults to 'default' if not sent.
+          nullable: true
+          example: default
+      example:
+        reference: internal-id
+        address:
+          country: GB
+          street_line_one: street_line_one
+          city: city
+          company_name: Humbly Arrogant
+          postcode: postcode
+          street_line_two: street_line_two
+          region: region
+        tax_number: GB459324
+        billing_type: card
+        external_reference: external_reference
+        standard_tax_rate: "15"
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: business
+        locale: en
+        brand: default
+        email: iain.cambridge@example.org
+        digital_tax_rate: "19.5"
+    Error:
+      required:
+      - code
+      - message
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+    FrontendToken:
+      required:
+      - token
+      type: object
+      properties:
+        token:
+          type: string
+          example: dummy-token-here
+      example:
+        token: dummy-token-here
+    PaymentDetails:
+      required:
+      - country
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          nullable: true
+        default:
+          type: boolean
+        brand:
+          type: string
+          nullable: true
+          example: visa
+        last_four:
+          type: string
+          example: "0484"
+        expiry_month:
+          type: string
+          example: "1"
+        expiry_year:
+          type: string
+          example: "26"
+        created_at:
+          type: string
+          format: string
+      example:
+        expiry_month: "1"
+        default: true
+        last_four: "0484"
+        name: name
+        created_at: created_at
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        brand: visa
+        expiry_year: "26"
+    Price:
+      required:
+      - amount
+      - currency
+      - recurring
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        amount:
+          type: integer
+          example: 1000
+        currency:
+          type: string
+          description: Three-letter ISO currency code. Must be upper-case
+          example: EUR
+        external_reference:
+          type: string
+          nullable: true
+        recurring:
+          type: boolean
+          example: false
+        schedule:
+          type: string
+          description: Required if recurring is true
+          nullable: true
+          enum:
+          - week
+          - month
+          - year
+          - one-off
+        including_tax:
+          type: boolean
+          description: If the price is including tax. If false tax will be added on
+            top of the price.
+          nullable: true
+        public:
+          type: boolean
+          nullable: true
+      example:
+        schedule: week
+        amount: 1000
+        public: true
+        recurring: false
+        including_tax: true
+        external_reference: external_reference
+        currency: EUR
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    Product:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        external_reference:
+          type: string
+          description: The reference given by the payment provider
+          nullable: true
+        tax_type:
+          $ref: '#/components/schemas/Product_tax_type'
+      example:
+        tax_type:
+          default: true
+          name: SaaS
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        name: name
+        external_reference: external_reference
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    Subscription:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        seat_number:
+          type: integer
+          example: 1
+        schedule:
+          type: string
+          example: month
+        status:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+        ended_at:
+          type: string
+        valid_until:
+          type: string
+        main_external_reference:
+          type: string
+        child_external_reference:
+          type: string
+        price:
+          $ref: '#/components/schemas/Price'
+        plan:
+          $ref: '#/components/schemas/SubscriptionPlan'
+      example:
+        schedule: month
+        valid_until: valid_until
+        updated_at: updated_at
+        seat_number: 1
+        price:
+          schedule: week
+          amount: 1000
+          public: true
+          recurring: false
+          including_tax: true
+          external_reference: external_reference
+          currency: EUR
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        main_external_reference: main_external_reference
+        created_at: created_at
+        child_external_reference: child_external_reference
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        plan:
+          product:
+            tax_type:
+              default: true
+              name: SaaS
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            name: name
+            external_reference: external_reference
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          code_name: mcplanface
+          has_trial: true
+          features:
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          user_count: 10
+          public: true
+          trial_length_days: 0
+          per_seat: false
+          name: Plany McPlanFace
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          free: false
+          prices:
+          - null
+          - null
+          is_trial_standalone: true
+          limits:
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+        ended_at: ended_at
+        status: status
+    SubscriptionPlan:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Plany McPlanFace
+        code_name:
+          type: string
+          example: mcplanface
+        user_count:
+          type: integer
+          example: 10
+        per_seat:
+          type: boolean
+          example: false
+        has_trial:
+          type: boolean
+          example: true
+        is_trial_standalone:
+          type: boolean
+          example: true
+        free:
+          type: boolean
+          example: false
+        public:
+          type: boolean
+          example: true
+        limits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Limit'
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'
+        product:
+          $ref: '#/components/schemas/Product'
+        prices:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        trial_length_days:
+          type: integer
+          nullable: true
+      example:
+        product:
+          tax_type:
+            default: true
+            name: SaaS
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          name: name
+          external_reference: external_reference
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        code_name: mcplanface
+        has_trial: true
+        features:
+        - code: glitter_bombs
+          name: Glitter Bombs
+          description: Send your enemies glitter bombs
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - code: glitter_bombs
+          name: Glitter Bombs
+          description: Send your enemies glitter bombs
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        user_count: 10
+        public: true
+        trial_length_days: 0
+        per_seat: false
+        name: Plany McPlanFace
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        free: false
+        prices:
+        - null
+        - null
+        is_trial_standalone: true
+        limits:
+        - feature:
+            code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          limit: 30
+        - feature:
+            code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          limit: 30
+    Feature:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Glitter Bombs
+        code:
+          type: string
+          nullable: true
+          example: glitter_bombs
+        description:
+          type: string
+          nullable: true
+          example: Send your enemies glitter bombs
+      example:
+        code: glitter_bombs
+        name: Glitter Bombs
+        description: Send your enemies glitter bombs
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    Limit:
+      required:
+      - name
+      type: object
+      properties:
+        feature:
+          $ref: '#/components/schemas/Feature'
+        limit:
+          type: integer
+          example: 30
+      example:
+        feature:
+          code: glitter_bombs
+          name: Glitter Bombs
+          description: Send your enemies glitter bombs
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        limit: 30
+    Invoice:
+      required:
+      - email
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        number:
+          type: string
+          example: "1023045"
+        currency:
+          type: string
+          example: USD
+        customer:
+          $ref: '#/components/schemas/Customer'
+        tax_total:
+          type: integer
+        sub_total:
+          type: integer
+        amount_due:
+          type: integer
+        paid:
+          type: boolean
+        pay_link:
+          type: string
+          example: https://demo.billabear.com/paylink
+        created_at:
+          type: string
+        paid_at:
+          type: string
+        due_date:
+          type: string
+        biller_address:
+          $ref: '#/components/schemas/Address'
+        payeeaddress:
+          $ref: '#/components/schemas/Address'
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoice_lines'
+      example:
+        tax_total: 0
+        biller_address:
+          country: GB
+          street_line_one: street_line_one
+          city: city
+          company_name: Humbly Arrogant
+          postcode: postcode
+          street_line_two: street_line_two
+          region: region
+        due_date: due_date
+        payeeaddress: null
+        created_at: created_at
+        paid_at: paid_at
+        number: "1023045"
+        pay_link: https://demo.billabear.com/paylink
+        sub_total: 6
+        paid: true
+        currency: USD
+        amount_due: 1
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        lines:
+        - total: 5
+          tax_total: 2
+          sub_total: 5
+          description: description
+          currency: currency
+          tax_rate: 7.061401241503109
+        - total: 5
+          tax_total: 2
+          sub_total: 5
+          description: description
+          currency: currency
+          tax_rate: 7.061401241503109
+        customer:
+          reference: internal-id
+          address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          tax_number: GB459324
+          billing_type: card
+          external_reference: external_reference
+          standard_tax_rate: "15"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: business
+          locale: en
+          brand: default
+          email: iain.cambridge@example.org
+          digital_tax_rate: "19.5"
+    Refund:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        amount:
+          type: integer
+          example: 1000
+        currency:
+          type: string
+          description: Three-letter ISO currency code. Must be upper-case
+          example: EUR
+        external_reference:
+          type: string
+          nullable: true
+        comment:
+          type: string
+          nullable: true
+          example: Customer thought they cancelled but had not
+        status:
+          type: string
+          enum:
+          - started
+          - rejected
+          - authorised
+          - issued
+        created_at:
+          type: string
+        payment:
+          $ref: '#/paths/~1payment/get/responses/200/content/application~1json/schema/properties/data/items'
+        customer:
+          $ref: '#/components/schemas/Customer'
+        billing_admin:
+          $ref: '#/components/schemas/BillingAdmin'
+      example:
+        amount: 1000
+        external_reference: external_reference
+        billing_admin:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          display_name: BillingMesiter
+        created_at: created_at
+        currency: EUR
+        comment: Customer thought they cancelled but had not
+        payment: "{}"
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: started
+        customer:
+          reference: internal-id
+          address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          tax_number: GB459324
+          billing_type: card
+          external_reference: external_reference
+          standard_tax_rate: "15"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: business
+          locale: en
+          brand: default
+          email: iain.cambridge@example.org
+          digital_tax_rate: "19.5"
+    BillingAdmin:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        display_name:
+          type: string
+          example: BillingMesiter
+      example:
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        display_name: BillingMesiter
+    IssueRefundPayment:
+      required:
+      - amount
+      type: object
+      properties:
+        amount:
+          type: integer
+          example: 1000
+        currency:
+          type: string
+          description: Three-letter ISO currency code. Must be upper-case
+          nullable: true
+          example: EUR
+        reason:
+          type: string
+          nullable: true
+          example: Customer thought they cancelled but had not
+    VoucherCode:
+      required:
+      - code
+      type: object
+      properties:
+        code:
+          type: string
+          example: vouch50
+    inline_response_200:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Customer'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - reference: internal-id
+          address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          tax_number: GB459324
+          billing_type: card
+          external_reference: external_reference
+          standard_tax_rate: "15"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: business
+          locale: en
+          brand: default
+          email: iain.cambridge@example.org
+          digital_tax_rate: "19.5"
+        - reference: internal-id
+          address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          tax_number: GB459324
+          billing_type: card
+          external_reference: external_reference
+          standard_tax_rate: "15"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: business
+          locale: en
+          brand: default
+          email: iain.cambridge@example.org
+          digital_tax_rate: "19.5"
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_400:
+      required:
+      - errors
+      type: object
+      properties:
+        errors:
+          type: object
+          additionalProperties:
+            type: string
+    inline_response_200_1:
+      type: object
+      properties:
+        limits:
+          type: array
+          items:
+            $ref: '#/components/schemas/Limit'
+        features:
+          type: array
+          items:
+            $ref: '#/components/schemas/Feature'
+        user_count:
+          type: integer
+      example:
+        features:
+        - null
+        - null
+        user_count: 0
+        limits:
+        - feature:
+            code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          limit: 30
+        - feature:
+            code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          limit: 30
+    inline_response_200_2:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Refund'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - amount: 1000
+          external_reference: external_reference
+          billing_admin:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            display_name: BillingMesiter
+          created_at: created_at
+          currency: EUR
+          comment: Customer thought they cancelled but had not
+          payment: "{}"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: started
+          customer:
+            reference: internal-id
+            address:
+              country: GB
+              street_line_one: street_line_one
+              city: city
+              company_name: Humbly Arrogant
+              postcode: postcode
+              street_line_two: street_line_two
+              region: region
+            tax_number: GB459324
+            billing_type: card
+            external_reference: external_reference
+            standard_tax_rate: "15"
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: business
+            locale: en
+            brand: default
+            email: iain.cambridge@example.org
+            digital_tax_rate: "19.5"
+        - amount: 1000
+          external_reference: external_reference
+          billing_admin:
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            display_name: BillingMesiter
+          created_at: created_at
+          currency: EUR
+          comment: Customer thought they cancelled but had not
+          payment: "{}"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: started
+          customer:
+            reference: internal-id
+            address:
+              country: GB
+              street_line_one: street_line_one
+              city: city
+              company_name: Humbly Arrogant
+              postcode: postcode
+              street_line_two: street_line_two
+              region: region
+            tax_number: GB459324
+            billing_type: card
+            external_reference: external_reference
+            standard_tax_rate: "15"
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: business
+            locale: en
+            brand: default
+            email: iain.cambridge@example.org
+            digital_tax_rate: "19.5"
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_3:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/paths/~1payment/get/responses/200/content/application~1json/schema/properties/data/items'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - "{}"
+        - "{}"
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_4:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Invoice'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - tax_total: 0
+          biller_address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          due_date: due_date
+          payeeaddress: null
+          created_at: created_at
+          paid_at: paid_at
+          number: "1023045"
+          pay_link: https://demo.billabear.com/paylink
+          sub_total: 6
+          paid: true
+          currency: USD
+          amount_due: 1
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          lines:
+          - total: 5
+            tax_total: 2
+            sub_total: 5
+            description: description
+            currency: currency
+            tax_rate: 7.061401241503109
+          - total: 5
+            tax_total: 2
+            sub_total: 5
+            description: description
+            currency: currency
+            tax_rate: 7.061401241503109
+          customer:
+            reference: internal-id
+            address:
+              country: GB
+              street_line_one: street_line_one
+              city: city
+              company_name: Humbly Arrogant
+              postcode: postcode
+              street_line_two: street_line_two
+              region: region
+            tax_number: GB459324
+            billing_type: card
+            external_reference: external_reference
+            standard_tax_rate: "15"
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: business
+            locale: en
+            brand: default
+            email: iain.cambridge@example.org
+            digital_tax_rate: "19.5"
+        - tax_total: 0
+          biller_address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          due_date: due_date
+          payeeaddress: null
+          created_at: created_at
+          paid_at: paid_at
+          number: "1023045"
+          pay_link: https://demo.billabear.com/paylink
+          sub_total: 6
+          paid: true
+          currency: USD
+          amount_due: 1
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          lines:
+          - total: 5
+            tax_total: 2
+            sub_total: 5
+            description: description
+            currency: currency
+            tax_rate: 7.061401241503109
+          - total: 5
+            tax_total: 2
+            sub_total: 5
+            description: description
+            currency: currency
+            tax_rate: 7.061401241503109
+          customer:
+            reference: internal-id
+            address:
+              country: GB
+              street_line_one: street_line_one
+              city: city
+              company_name: Humbly Arrogant
+              postcode: postcode
+              street_line_two: street_line_two
+              region: region
+            tax_number: GB459324
+            billing_type: card
+            external_reference: external_reference
+            standard_tax_rate: "15"
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: business
+            locale: en
+            brand: default
+            email: iain.cambridge@example.org
+            digital_tax_rate: "19.5"
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_5:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentDetails'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - expiry_month: "1"
+          default: true
+          last_four: "0484"
+          name: name
+          created_at: created_at
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          brand: visa
+          expiry_year: "26"
+        - expiry_month: "1"
+          default: true
+          last_four: "0484"
+          name: name
+          created_at: created_at
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          brand: visa
+          expiry_year: "26"
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    subscription_start_body:
+      required:
+      - subscription_plan
+      type: object
+      properties:
+        subscription_plan:
+          type: string
+          description: The ID for the subscription plan to be used (Can also be the
+            code name)
+          format: uuid
+        payment_details:
+          type: string
+          description: The Id for the customer's payment details to be used
+          format: uuid
+        card_token:
+          type: string
+          description: A stripe card token that's been created using Stripe's js sdk.
+            It'll create the payment details for the customer.
+        price:
+          type: string
+          description: The ID for the price to be used
+          format: uuid
+        schedule:
+          type: string
+          description: The schedule of the plan that is to be started. Only used if
+            price isn't given. Requires currency as well.
+          enum:
+          - week
+          - month
+          - year
+          - one-off
+        currency:
+          type: string
+          description: The currency of the plan that is to be started. Only used if
+            price isn't given. Requires schedule as well.
+        seat_numbrers:
+          type: integer
+          example: 1
+        deny_trial:
+          type: bool
+          example: true
+    subscription_trial_body:
+      required:
+      - subscription_plan
+      type: object
+      properties:
+        subscription_plan:
+          type: string
+          description: The ID for the subscription plan to be used (Can also be the
+            code name)
+          format: uuid
+        card_token:
+          type: string
+          description: A stripe card token that's been created using Stripe's js sdk.
+            It'll create the payment details for the customer.
+        seat_numbrers:
+          type: integer
+          nullable: true
+          example: 1
+        trial_length_days:
+          type: integer
+          nullable: true
+          example: 1
+    inline_response_200_6:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Subscription'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - schedule: month
+          valid_until: valid_until
+          updated_at: updated_at
+          seat_number: 1
+          price:
+            schedule: week
+            amount: 1000
+            public: true
+            recurring: false
+            including_tax: true
+            external_reference: external_reference
+            currency: EUR
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          main_external_reference: main_external_reference
+          created_at: created_at
+          child_external_reference: child_external_reference
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          plan:
+            product:
+              tax_type:
+                default: true
+                name: SaaS
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              name: name
+              external_reference: external_reference
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            code_name: mcplanface
+            has_trial: true
+            features:
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            user_count: 10
+            public: true
+            trial_length_days: 0
+            per_seat: false
+            name: Plany McPlanFace
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            free: false
+            prices:
+            - null
+            - null
+            is_trial_standalone: true
+            limits:
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+          ended_at: ended_at
+          status: status
+        - schedule: month
+          valid_until: valid_until
+          updated_at: updated_at
+          seat_number: 1
+          price:
+            schedule: week
+            amount: 1000
+            public: true
+            recurring: false
+            including_tax: true
+            external_reference: external_reference
+            currency: EUR
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          main_external_reference: main_external_reference
+          created_at: created_at
+          child_external_reference: child_external_reference
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          plan:
+            product:
+              tax_type:
+                default: true
+                name: SaaS
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              name: name
+              external_reference: external_reference
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            code_name: mcplanface
+            has_trial: true
+            features:
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            user_count: 10
+            public: true
+            trial_length_days: 0
+            per_seat: false
+            name: Plany McPlanFace
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            free: false
+            prices:
+            - null
+            - null
+            is_trial_standalone: true
+            limits:
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+          ended_at: ended_at
+          status: status
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_7:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_7_data'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - receipts:
+          - valid: true
+            created_at: created_at
+            id: id
+          - valid: true
+            created_at: created_at
+            id: id
+          amount: 1000
+          external_reference: external_reference
+          created_at: created_at
+          currency: EUR
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: pending
+          customer:
+            reference: internal-id
+            address:
+              country: GB
+              street_line_one: street_line_one
+              city: city
+              company_name: Humbly Arrogant
+              postcode: postcode
+              street_line_two: street_line_two
+              region: region
+            tax_number: GB459324
+            billing_type: card
+            external_reference: external_reference
+            standard_tax_rate: "15"
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: business
+            locale: en
+            brand: default
+            email: iain.cambridge@example.org
+            digital_tax_rate: "19.5"
+        - receipts:
+          - valid: true
+            created_at: created_at
+            id: id
+          - valid: true
+            created_at: created_at
+            id: id
+          amount: 1000
+          external_reference: external_reference
+          created_at: created_at
+          currency: EUR
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          status: pending
+          customer:
+            reference: internal-id
+            address:
+              country: GB
+              street_line_one: street_line_one
+              city: city
+              company_name: Humbly Arrogant
+              postcode: postcode
+              street_line_two: street_line_two
+              region: region
+            tax_number: GB459324
+            billing_type: card
+            external_reference: external_reference
+            standard_tax_rate: "15"
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: business
+            locale: en
+            brand: default
+            email: iain.cambridge@example.org
+            digital_tax_rate: "19.5"
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_8:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Product'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - tax_type:
+            default: true
+            name: SaaS
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          name: name
+          external_reference: external_reference
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - tax_type:
+            default: true
+            name: SaaS
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          name: name
+          external_reference: external_reference
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_9:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Price'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - schedule: week
+          amount: 1000
+          public: true
+          recurring: false
+          including_tax: true
+          external_reference: external_reference
+          currency: EUR
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - schedule: week
+          amount: 1000
+          public: true
+          recurring: false
+          including_tax: true
+          external_reference: external_reference
+          currency: EUR
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    inline_response_200_10:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/SubscriptionPlan'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - product:
+            tax_type:
+              default: true
+              name: SaaS
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            name: name
+            external_reference: external_reference
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          code_name: mcplanface
+          has_trial: true
+          features:
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          user_count: 10
+          public: true
+          trial_length_days: 0
+          per_seat: false
+          name: Plany McPlanFace
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          free: false
+          prices:
+          - null
+          - null
+          is_trial_standalone: true
+          limits:
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+        - product:
+            tax_type:
+              default: true
+              name: SaaS
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            name: name
+            external_reference: external_reference
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          code_name: mcplanface
+          has_trial: true
+          features:
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          user_count: 10
+          public: true
+          trial_length_days: 0
+          per_seat: false
+          name: Plany McPlanFace
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          free: false
+          prices:
+          - null
+          - null
+          is_trial_standalone: true
+          limits:
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    seats_add_body:
+      required:
+      - seats
+      type: object
+      properties:
+        seats:
+          type: integer
+          example: 2
+    inline_response_200_11:
+      type: object
+      properties:
+        success:
+          type: boolean
+      example:
+        success: true
+    seats_remove_body:
+      required:
+      - seats
+      type: object
+      properties:
+        seats:
+          type: integer
+          example: 2
+    subscriptionId_cancel_body:
+      required:
+      - refund_type
+      - when
+      type: object
+      properties:
+        when:
+          type: string
+          default: end-of-run
+          enum:
+          - end-of-run
+          - instantly
+          - specific-date
+        refund_type:
+          type: string
+          default: none
+          enum:
+          - none
+          - full
+          - prorate
+        date:
+          type: string
+          format: date
+        comment:
+          type: string
+          nullable: true
+    subscriptionId_extend_body:
+      required:
+      - price
+      type: object
+      properties:
+        price:
+          type: uuid
+    subscriptionId_plan_body:
+      required:
+      - price
+      - subscription_plan
+      - when
+      type: object
+      properties:
+        when:
+          type: string
+          example: instantly
+          enum:
+          - instantly
+          - next-cycle
+        plan:
+          type: string
+          description: The ID for the subscription plan to be used
+          format: uuid
+        price:
+          type: string
+          description: The ID for the price to be used
+          format: uuid
+    subscriptionId_price_body:
+      required:
+      - price
+      - when
+      type: object
+      properties:
+        price:
+          type: uuid
+        when:
+          type: string
+          enum:
+          - next_cycle
+          - instantly
+    checkout_items:
+      type: object
+      properties:
+        description:
+          type: string
+        amount:
+          type: integer
+        currency:
+          type: string
+        include_tax:
+          type: boolean
+        tax_type:
+          type: string
+    checkout_subscriptions:
+      type: object
+      properties:
+        plan:
+          type: string
+        price:
+          type: string
+        seat_number:
+          type: integer
+    checkout_body:
+      required:
+      - brand
+      - customer
+      type: object
+      properties:
+        name:
+          type: string
+        brand:
+          type: string
+        slug:
+          type: string
+        customer:
+          type: string
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/checkout_items'
+        subscriptions:
+          type: array
+          items:
+            $ref: '#/components/schemas/checkout_subscriptions'
+    inline_response_201:
+      required:
+      - id
+      type: object
+      properties:
+        id:
+          type: uuid
+        name:
+          type: string
+        currency:
+          type: string
+        customer:
+          $ref: '#/components/schemas/Customer'
+        billing_admin:
+          $ref: '#/components/schemas/BillingAdmin'
+        total:
+          type: integer
+        sub_total:
+          type: integer
+        tax_total:
+          type: integer
+        lines:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_201_lines'
+      example:
+        total: 0
+        tax_total: 1
+        name: name
+        billing_admin:
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          display_name: BillingMesiter
+        sub_total: 6
+        currency: currency
+        id: ""
+        lines:
+        - tax_total: 2
+          price:
+            schedule: week
+            amount: 1000
+            public: true
+            recurring: false
+            including_tax: true
+            external_reference: external_reference
+            currency: EUR
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          seat_number: 5
+          sub_total: 5
+          description: description
+          currency: currency
+          subscription_plan:
+            product:
+              tax_type:
+                default: true
+                name: SaaS
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              name: name
+              external_reference: external_reference
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            code_name: mcplanface
+            has_trial: true
+            features:
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            user_count: 10
+            public: true
+            trial_length_days: 0
+            per_seat: false
+            name: Plany McPlanFace
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            free: false
+            prices:
+            - null
+            - null
+            is_trial_standalone: true
+            limits:
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+          tax_rate: 7.061401241503109
+        - tax_total: 2
+          price:
+            schedule: week
+            amount: 1000
+            public: true
+            recurring: false
+            including_tax: true
+            external_reference: external_reference
+            currency: EUR
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          seat_number: 5
+          sub_total: 5
+          description: description
+          currency: currency
+          subscription_plan:
+            product:
+              tax_type:
+                default: true
+                name: SaaS
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              name: name
+              external_reference: external_reference
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            code_name: mcplanface
+            has_trial: true
+            features:
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            - code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            user_count: 10
+            public: true
+            trial_length_days: 0
+            per_seat: false
+            name: Plany McPlanFace
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            free: false
+            prices:
+            - null
+            - null
+            is_trial_standalone: true
+            limits:
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+            - feature:
+                code: glitter_bombs
+                name: Glitter Bombs
+                description: Send your enemies glitter bombs
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              limit: 30
+          tax_rate: 7.061401241503109
+        customer:
+          reference: internal-id
+          address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          tax_number: GB459324
+          billing_type: card
+          external_reference: external_reference
+          standard_tax_rate: "15"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: business
+          locale: en
+          brand: default
+          email: iain.cambridge@example.org
+          digital_tax_rate: "19.5"
+    inline_response_200_12:
+      type: object
+      properties:
+        paid:
+          type: boolean
+        failure_reason:
+          type: string
+          nullable: true
+          enum:
+          - expired_card
+          - invalid_details
+          - fraud
+          - authentication_required
+          - invalid_card
+          - general_decline
+          - contact_provider
+          - lack_of_funds
+      example:
+        paid: true
+        failure_reason: expired_card
+    Product_tax_type:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: SaaS
+        default:
+          type: boolean
+      example:
+        default: true
+        name: SaaS
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    Invoice_lines:
+      type: object
+      properties:
+        description:
+          type: string
+        currency:
+          type: string
+        total:
+          type: integer
+        sub_total:
+          type: integer
+        tax_total:
+          type: integer
+        tax_rate:
+          type: number
+      example:
+        total: 5
+        tax_total: 2
+        sub_total: 5
+        description: description
+        currency: currency
+        tax_rate: 7.061401241503109
+    inline_response_200_7_receipts:
+      type: object
+      properties:
+        created_at:
+          type: string
+        id:
+          type: string
+        valid:
+          type: boolean
+      example:
+        valid: true
+        created_at: created_at
+        id: id
+    inline_response_200_7_data:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        amount:
+          type: integer
+          example: 1000
+        currency:
+          type: string
+          description: Three-letter ISO currency code. Must be upper-case
+          example: EUR
+        external_reference:
+          type: string
+          nullable: true
+        status:
+          type: string
+          enum:
+          - pending
+          - completed
+          - disputed
+          - partially_refunded
+          - fully_refunded
+        created_at:
+          type: string
+        customer:
+          $ref: '#/components/schemas/Customer'
+        receipts:
+          type: array
+          items:
+            $ref: '#/components/schemas/inline_response_200_7_receipts'
+      example:
+        receipts:
+        - valid: true
+          created_at: created_at
+          id: id
+        - valid: true
+          created_at: created_at
+          id: id
+        amount: 1000
+        external_reference: external_reference
+        created_at: created_at
+        currency: EUR
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        status: pending
+        customer:
+          reference: internal-id
+          address:
+            country: GB
+            street_line_one: street_line_one
+            city: city
+            company_name: Humbly Arrogant
+            postcode: postcode
+            street_line_two: street_line_two
+            region: region
+          tax_number: GB459324
+          billing_type: card
+          external_reference: external_reference
+          standard_tax_rate: "15"
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: business
+          locale: en
+          brand: default
+          email: iain.cambridge@example.org
+          digital_tax_rate: "19.5"
+    inline_response_201_lines:
+      type: object
+      properties:
+        subscription_plan:
+          $ref: '#/components/schemas/SubscriptionPlan'
+        price:
+          $ref: '#/components/schemas/Price'
+        description:
+          type: string
+        currency:
+          type: string
+        seat_number:
+          type: integer
+        sub_total:
+          type: integer
+        tax_total:
+          type: integer
+        tax_rate:
+          type: number
+      example:
+        tax_total: 2
+        price:
+          schedule: week
+          amount: 1000
+          public: true
+          recurring: false
+          including_tax: true
+          external_reference: external_reference
+          currency: EUR
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        seat_number: 5
+        sub_total: 5
+        description: description
+        currency: currency
+        subscription_plan:
+          product:
+            tax_type:
+              default: true
+              name: SaaS
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            name: name
+            external_reference: external_reference
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          code_name: mcplanface
+          has_trial: true
+          features:
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          - code: glitter_bombs
+            name: Glitter Bombs
+            description: Send your enemies glitter bombs
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          user_count: 10
+          public: true
+          trial_length_days: 0
+          per_seat: false
+          name: Plany McPlanFace
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          free: false
+          prices:
+          - null
+          - null
+          is_trial_standalone: true
+          limits:
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+          - feature:
+              code: glitter_bombs
+              name: Glitter Bombs
+              description: Send your enemies glitter bombs
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            limit: 30
+        tax_rate: 7.061401241503109
+  responses:
+    UnexpectedError:
+      description: unexpected error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NullResponse:
+      description: Null response
+      content:
+        application/json:
+          schema:
+            type: string
+            nullable: true
+            x-content-type: application/json
+  parameters:
+    customerId:
+      name: customerId
+      in: path
+      description: The id of the customer to retrieve
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    invoiceId:
+      name: invoiceId
+      in: path
+      description: The id of the invoice
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    paymenDetailsId:
+      name: paymentDetailsId
+      in: path
+      description: The id of the payment details
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    paymentId:
+      name: paymentId
+      in: path
+      description: The id of the payment
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    productId:
+      name: productId
+      in: path
+      description: The id of the product to retrieve
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    receiptId:
+      name: receipt
+      in: path
+      description: The id of the receipt
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    refundId:
+      name: refundId
+      in: path
+      description: The id of the refund
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    subscriptionId:
+      name: subscriptionId
+      in: path
+      description: The id of the subscription to retrieve
+      required: true
+      style: simple
+      explode: false
+      schema:
+        type: string
+    limit:
+      name: limit
+      in: query
+      description: How many items to return at one time (max 100)
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: integer
+        format: int32
+    last_key:
+      name: last_key
+      in: query
+      description: The key to be used in pagination to say what the last key of the
+        previous page was
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    email:
+      name: email
+      in: query
+      description: The email to search for
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    country:
+      name: country
+      in: query
+      description: The country code to search for
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    reference:
+      name: reference
+      in: query
+      description: The reference to search for
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    external_reference:
+      name: external_reference
+      in: query
+      description: The external reference to search for
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+    name:
+      name: name
+      in: query
+      description: The name to search for
+      required: false
+      style: form
+      explode: true
+      schema:
+        type: string
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      name: X-API-Key
+      in: header
