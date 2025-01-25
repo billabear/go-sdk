@@ -1,4 +1,4 @@
-# BillaBear{{classname}}
+# {{classname}}
 
 All URIs are relative to *https://{customerId}.billabear.cloud/api/v1*
 

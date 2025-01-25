@@ -8,7 +8,7 @@ info:
     email: support@billabear.com
   license:
     name: FCL
-  version: 1.0.0
+  version: 1.1.0
 servers:
 - url: "https://{customerId}.billabear.cloud/api/v1"
   variables:
