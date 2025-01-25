@@ -30,15 +30,15 @@ InvoicesApiService Charge Invoice
 Attempts to charge a card that is on file for the invoice amount
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param invoiceId The id of the invoice
-@return InlineResponse20012
+@return InlineResponse20014
 */
-func (a *InvoicesApiService) ChargeInvoice(ctx context.Context, invoiceId string) (InlineResponse20012, *http.Response, error) {
+func (a *InvoicesApiService) ChargeInvoice(ctx context.Context, invoiceId string) (InlineResponse20014, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse20012
+		localVarReturnValue InlineResponse20014
 	)
 
 	// create path and map variables
@@ -109,17 +109,7 @@ func (a *InvoicesApiService) ChargeInvoice(ctx context.Context, invoiceId string
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse20012
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
-		if localVarHttpResponse.StatusCode == 404 {
-			var v string
+			var v InlineResponse20014
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -246,15 +236,15 @@ InvoicesApiService List Customer Invoices
 List Customer Invoices
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param customerId The id of the customer to retrieve
-@return InlineResponse2004
+@return InlineResponse2006
 */
-func (a *InvoicesApiService) GetInvoicesForCustomer(ctx context.Context, customerId string) (InlineResponse2004, *http.Response, error) {
+func (a *InvoicesApiService) GetInvoicesForCustomer(ctx context.Context, customerId string) (InlineResponse2006, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2004
+		localVarReturnValue InlineResponse2006
 	)
 
 	// create path and map variables
@@ -325,7 +315,7 @@ func (a *InvoicesApiService) GetInvoicesForCustomer(ctx context.Context, custome
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2004
+			var v InlineResponse2006
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()

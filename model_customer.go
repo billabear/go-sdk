@@ -29,4 +29,8 @@ type Customer struct {
 	Locale string `json:"locale,omitempty"`
 	// Defaults to 'default' if not sent.
 	Brand string `json:"brand,omitempty"`
+	// Choice between 'pdf' and 'xrechnung'. <strong>Since 2024.02.01</strong>
+	InvoiceFormat string `json:"invoice_format,omitempty"`
+	// If the customer has opted in for marketing
+	MarketingOptIn bool `json:"marketing_opt_in,omitempty"`
 }

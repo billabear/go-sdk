@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]Price**](Price.md) |  | [optional] [default to null]
+**Data** | [**[]InlineResponse2009Data**](inline_response_200_9_data.md) |  | [optional] [default to null]
 **HasMore** | **bool** |  | [optional] [default to null]
 **LastKey** | **string** |  | [optional] [default to null]
 

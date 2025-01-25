@@ -32,15 +32,15 @@ Create a price
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param body
  * @param productId The id of the product to retrieve
-@return string
+
 */
-func (a *PricesApiService) CreatePrice(ctx context.Context, body Price, productId string) (string, *http.Response, error) {
+func (a *PricesApiService) CreatePrice(ctx context.Context, body Price, productId string) (*http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue string
+		
 	)
 
 	// create path and map variables
@@ -85,57 +85,40 @@ func (a *PricesApiService) CreatePrice(ctx context.Context, body Price, productI
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
-		return localVarReturnValue, nil, err
+		return nil, err
 	}
 
 	localVarHttpResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHttpResponse == nil {
-		return localVarReturnValue, localVarHttpResponse, err
+		return localVarHttpResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
 	localVarHttpResponse.Body.Close()
 	if err != nil {
-		return localVarReturnValue, localVarHttpResponse, err
+		return localVarHttpResponse, err
 	}
 
-	if localVarHttpResponse.StatusCode < 300 {
-		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
-			return localVarReturnValue, localVarHttpResponse, err
-		}
-	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
 			body: localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		if localVarHttpResponse.StatusCode == 201 {
-			var v string
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
 		if localVarHttpResponse.StatusCode == 0 {
 			var v ModelError
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
+					return localVarHttpResponse, newErr
 				}
 				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
+				return localVarHttpResponse, newErr
 		}
-		return localVarReturnValue, localVarHttpResponse, newErr
+		return localVarHttpResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHttpResponse, nil
+	return localVarHttpResponse, nil
 }
 /*
 PricesApiService List
@@ -145,7 +128,7 @@ List all prices
  * @param optional nil or *PricesApiListPriceOpts - Optional Parameters:
      * @param "Limit" (optional.Int32) -  How many items to return at one time (max 100)
      * @param "LastKey" (optional.String) -  The key to be used in pagination to say what the last key of the previous page was
-@return InlineResponse2009
+@return InlineResponse20011
 */
 
 type PricesApiListPriceOpts struct {
@@ -153,13 +136,13 @@ type PricesApiListPriceOpts struct {
     LastKey optional.String
 }
 
-func (a *PricesApiService) ListPrice(ctx context.Context, productId string, localVarOptionals *PricesApiListPriceOpts) (InlineResponse2009, *http.Response, error) {
+func (a *PricesApiService) ListPrice(ctx context.Context, productId string, localVarOptionals *PricesApiListPriceOpts) (InlineResponse20011, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2009
+		localVarReturnValue InlineResponse20011
 	)
 
 	// create path and map variables
@@ -236,7 +219,7 @@ func (a *PricesApiService) ListPrice(ctx context.Context, productId string, loca
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2009
+			var v InlineResponse20011
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()

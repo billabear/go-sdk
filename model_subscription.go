@@ -20,6 +20,7 @@ type Subscription struct {
 	ValidUntil string `json:"valid_until,omitempty"`
 	MainExternalReference string `json:"main_external_reference,omitempty"`
 	ChildExternalReference string `json:"child_external_reference,omitempty"`
+	Metadata *interface{} `json:"metadata,omitempty"`
 	Price *Price `json:"price,omitempty"`
 	Plan *SubscriptionPlan `json:"plan,omitempty"`
 }

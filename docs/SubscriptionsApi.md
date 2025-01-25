@@ -19,7 +19,7 @@ Method | HTTP request | Description
 [**StartTrial**](SubscriptionsApi.md#StartTrial) | **Post** /customer/{customerId}/subscription/trial | Start Trial Subscription For Customer
 
 # **AddSeatsSubscriptions**
-> InlineResponse20011 AddSeatsSubscriptions(ctx, body, subscriptionId)
+> InlineResponse20013 AddSeatsSubscriptions(ctx, body, subscriptionId)
 Add Seats
 
 Adds seats to a per seat subscription<br><br><strong>Since 1.1.4</strong>
@@ -34,7 +34,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse20011**](inline_response_200_11.md)
+[**InlineResponse20013**](inline_response_200_13.md)
 
 ### Authorization
 
@@ -48,7 +48,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **CancelSubscription**
-> string CancelSubscription(ctx, body, subscriptionId)
+> CancelSubscription(ctx, body, subscriptionId)
 Cancel Subscription
 
 Info for a specific subscription
@@ -63,7 +63,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -77,7 +77,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ChangeSubscriptionPrice**
-> InlineResponse20011 ChangeSubscriptionPrice(ctx, body, subscriptionId)
+> InlineResponse20013 ChangeSubscriptionPrice(ctx, body, subscriptionId)
 Change Price
 
 Changes the price being used for a price. Useful for changing pricing schedule or just price.
@@ -92,7 +92,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse20011**](inline_response_200_11.md)
+[**InlineResponse20013**](inline_response_200_13.md)
 
 ### Authorization
 
@@ -193,7 +193,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **GetActiveForCustomer**
-> InlineResponse2006 GetActiveForCustomer(ctx, customerId)
+> InlineResponse2008 GetActiveForCustomer(ctx, customerId)
 List Customer Active Subscriptions
 
 List all Active customer subscriptions
@@ -207,7 +207,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2006**](inline_response_200_6.md)
+[**InlineResponse2008**](inline_response_200_8.md)
 
 ### Authorization
 
@@ -221,7 +221,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **GetForCustomer**
-> InlineResponse2006 GetForCustomer(ctx, customerId)
+> InlineResponse2008 GetForCustomer(ctx, customerId)
 List Customer Subscriptions
 
 List all customer subscriptions<br><br><strong>Since 1.1</strong>
@@ -235,7 +235,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2006**](inline_response_200_6.md)
+[**InlineResponse2008**](inline_response_200_8.md)
 
 ### Authorization
 
@@ -249,7 +249,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ListSubscriptionPlans**
-> InlineResponse20010 ListSubscriptionPlans(ctx, optional)
+> InlineResponse20012 ListSubscriptionPlans(ctx, optional)
 List Subscription Plans
 
 List all subscriptions plans
@@ -270,7 +270,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse20010**](inline_response_200_10.md)
+[**InlineResponse20012**](inline_response_200_12.md)
 
 ### Authorization
 
@@ -284,7 +284,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ListSubscriptions**
-> InlineResponse2006 ListSubscriptions(ctx, optional)
+> InlineResponse2008 ListSubscriptions(ctx, optional)
 List
 
 List all subscriptions
@@ -305,7 +305,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2006**](inline_response_200_6.md)
+[**InlineResponse2008**](inline_response_200_8.md)
 
 ### Authorization
 
@@ -319,7 +319,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **RemoveSeatsSubscriptions**
-> InlineResponse20011 RemoveSeatsSubscriptions(ctx, body, subscriptionId)
+> InlineResponse20013 RemoveSeatsSubscriptions(ctx, body, subscriptionId)
 Remove Seats
 
 Remove seats to a per seat subscription<br><br><strong>Since 1.1.4</strong>
@@ -334,7 +334,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse20011**](inline_response_200_11.md)
+[**InlineResponse20013**](inline_response_200_13.md)
 
 ### Authorization
 

@@ -10,7 +10,7 @@
 package swagger
 
 type InlineResponse2002 struct {
-	Data []Refund `json:"data,omitempty"`
-	HasMore bool `json:"has_more,omitempty"`
-	LastKey string `json:"last_key,omitempty"`
+	Limits []Limit `json:"limits,omitempty"`
+	Features []Feature `json:"features,omitempty"`
+	UserCount int32 `json:"user_count,omitempty"`
 }

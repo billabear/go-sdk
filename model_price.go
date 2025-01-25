@@ -21,4 +21,5 @@ type Price struct {
 	// If the price is including tax. If false tax will be added on top of the price.
 	IncludingTax bool `json:"including_tax,omitempty"`
 	Public bool `json:"public,omitempty"`
+	Metric *Metric `json:"metric,omitempty"`
 }

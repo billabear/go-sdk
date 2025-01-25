@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **Schedule** | **string** | Required if recurring is true | [optional] [default to null]
 **IncludingTax** | **bool** | If the price is including tax. If false tax will be added on top of the price. | [optional] [default to null]
 **Public** | **bool** |  | [optional] [default to null]
+**Metric** | [***Metric**](Metric.md) |  | [optional] [default to null]
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

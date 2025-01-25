@@ -12,7 +12,7 @@ package swagger
 type SubscriptionIdPlanBody struct {
 	When string `json:"when"`
 	// The ID for the subscription plan to be used
-	Plan string `json:"plan,omitempty"`
+	Plan string `json:"plan"`
 	// The ID for the price to be used
 	Price string `json:"price"`
 }

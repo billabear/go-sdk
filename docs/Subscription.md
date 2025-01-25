@@ -13,6 +13,7 @@ Name | Type | Description | Notes
 **ValidUntil** | **string** |  | [optional] [default to null]
 **MainExternalReference** | **string** |  | [optional] [default to null]
 **ChildExternalReference** | **string** |  | [optional] [default to null]
+**Metadata** | [***interface{}**](interface{}.md) |  | [optional] [default to null]
 **Price** | [***Price**](Price.md) |  | [optional] [default to null]
 **Plan** | [***SubscriptionPlan**](SubscriptionPlan.md) |  | [optional] [default to null]
 

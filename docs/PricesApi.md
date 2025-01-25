@@ -8,7 +8,7 @@ Method | HTTP request | Description
 [**ListPrice**](PricesApi.md#ListPrice) | **Get** /product/{productId}/price | List
 
 # **CreatePrice**
-> string CreatePrice(ctx, body, productId)
+> CreatePrice(ctx, body, productId)
 Create
 
 Create a price
@@ -23,7 +23,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -37,7 +37,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ListPrice**
-> InlineResponse2009 ListPrice(ctx, productId, optional)
+> InlineResponse20011 ListPrice(ctx, productId, optional)
 List
 
 List all prices
@@ -60,7 +60,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2009**](inline_response_200_9.md)
+[**InlineResponse20011**](inline_response_200_11.md)
 
 ### Authorization
 

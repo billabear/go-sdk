@@ -10,7 +10,6 @@
 package swagger
 
 type InlineResponse2001 struct {
-	Limits []Limit `json:"limits,omitempty"`
-	Features []Feature `json:"features,omitempty"`
-	UserCount int32 `json:"user_count,omitempty"`
+	Costs []MetricCost `json:"costs,omitempty"`
+	Cost *Cost `json:"cost,omitempty"`
 }

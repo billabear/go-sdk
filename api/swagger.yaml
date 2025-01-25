@@ -7,7 +7,7 @@ info:
     url: http://www.billabear.com/support
     email: support@billabear.com
   license:
-    name: FSL
+    name: FCL
   version: 1.0.0
 servers:
 - url: "https://{customerId}.billabear.cloud/api/v1"
@@ -73,6 +73,14 @@ paths:
       - name: external_reference
         in: query
         description: The external reference to search for
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+      - name: company_name
+        in: query
+        description: The company name to search for
         required: false
         style: form
         explode: true
@@ -147,12 +155,6 @@ paths:
                 $ref: '#/components/schemas/Customer'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -220,11 +222,45 @@ paths:
       responses:
         "202":
           description: Null response
+        default:
+          description: unexpected error
           content:
             application/json:
               schema:
-                type: string
-                nullable: true
+                $ref: '#/components/schemas/Error'
+  /customer/{customerId}/costs:
+    get:
+      tags:
+      - Customers
+      - Usage
+      summary: Usage Cost Estimate
+      description: The estimated costs from usage based billing for a customer
+      operationId: getCustomerCosts
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: The usage costs for a customer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_1'
+        "404":
+          description: Null response
+        "422":
+          description: The customer doesn't have any subscriptions that are usage
+            based
+          content:
+            application/json:
+              schema:
+                type: array
                 x-content-type: application/json
         default:
           description: unexpected error
@@ -251,20 +287,8 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -290,12 +314,6 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -324,15 +342,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_1'
+                $ref: '#/components/schemas/inline_response_200_2'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -388,7 +400,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_2'
+                $ref: '#/components/schemas/inline_response_200_3'
         default:
           description: unexpected error
           content:
@@ -444,13 +456,101 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_3'
+                $ref: '#/components/schemas/inline_response_200_4'
         default:
           description: unexpected error
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/Error'
+  /customer/{customerId}/uasge-limit:
+    get:
+      tags:
+      - Customers
+      - Usage
+      summary: Fetch Customer Usage Limits
+      description: Usage Limits for a specific customer
+      operationId: getCustomerUsageLimitsById
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Expected response to a valid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/inline_response_200_5'
+        "404":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+      - Customers
+      - Usage
+      summary: Create Usage Limit
+      description: Create Usage Limit for the custoemr
+      operationId: createCustomerUsageLimit
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/customerId_uasgelimit_body'
+        required: true
+      responses:
+        "201":
+          description: Usage Limit
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UsageLimit'
+  /customer/{customerId}/uasge-limit/{limitId}:
+    delete:
+      tags:
+      - Customers
+      - Usage
+      summary: Delete Usage Limit
+      description: Delete Usage Limit for the custoemr
+      parameters:
+      - name: customerId
+        in: path
+        description: The id of the customer to retrieve
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      - name: usageLimitId
+        in: path
+        description: The id of the usage limit
+        required: true
+        style: simple
+        explode: false
+        schema:
+          type: string
+      responses:
+        "200":
+          description: Deleted Limit
   /customer/{customerId}/invoices:
     get:
       tags:
@@ -475,7 +575,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_4'
+                $ref: '#/components/schemas/inline_response_200_6'
         default:
           description: unexpected error
           content:
@@ -507,12 +607,6 @@ paths:
                 $ref: '#/components/schemas/FrontendToken'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -549,12 +643,6 @@ paths:
                 $ref: '#/components/schemas/PaymentDetails'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -588,20 +676,8 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -633,12 +709,6 @@ paths:
                 $ref: '#/components/schemas/PaymentDetails'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -663,20 +733,8 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -708,15 +766,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_5'
+                $ref: '#/components/schemas/inline_response_200_7'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -750,20 +802,8 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -797,20 +837,8 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -850,12 +878,6 @@ paths:
           $ref: '#/paths/~1invoice~1%7BinvoiceId%7D~1charge/post/responses/200'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "406":
           description: Customer has no payment details to be use
         default:
@@ -895,12 +917,6 @@ paths:
                 $ref: '#/components/schemas/Subscription'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -930,7 +946,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_6'
+                $ref: '#/components/schemas/inline_response_200_8'
         default:
           description: unexpected error
           content:
@@ -960,7 +976,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_6'
+                $ref: '#/components/schemas/inline_response_200_8'
         default:
           description: unexpected error
           content:
@@ -1007,7 +1023,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_7'
+                $ref: '#/components/schemas/inline_response_200_9'
         default:
           description: unexpected error
           content:
@@ -1039,28 +1055,10 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "406":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1107,7 +1105,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_2'
+                $ref: '#/components/schemas/inline_response_200_3'
         default:
           description: unexpected error
           content:
@@ -1139,12 +1137,6 @@ paths:
                 $ref: '#/components/schemas/Refund'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1191,7 +1183,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_8'
+                $ref: '#/components/schemas/inline_response_200_10'
         default:
           description: unexpected error
           content:
@@ -1213,12 +1205,6 @@ paths:
       responses:
         "201":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1322,7 +1308,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_9'
+                $ref: '#/components/schemas/inline_response_200_11'
         default:
           description: unexpected error
           content:
@@ -1353,12 +1339,6 @@ paths:
       responses:
         "201":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1397,7 +1377,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_6'
+                $ref: '#/components/schemas/inline_response_200_8'
         default:
           description: unexpected error
           content:
@@ -1436,7 +1416,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_10'
+                $ref: '#/components/schemas/inline_response_200_12'
         default:
           description: unexpected error
           content:
@@ -1468,12 +1448,6 @@ paths:
                 $ref: '#/components/schemas/Subscription'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1509,7 +1483,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_11'
+                $ref: '#/components/schemas/inline_response_200_13'
         default:
           description: unexpected error
           content:
@@ -1545,7 +1519,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_11'
+                $ref: '#/components/schemas/inline_response_200_13'
         default:
           description: unexpected error
           content:
@@ -1577,20 +1551,8 @@ paths:
       responses:
         "202":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1697,7 +1659,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_11'
+                $ref: '#/components/schemas/inline_response_200_13'
         default:
           description: unexpected error
           content:
@@ -1753,17 +1715,11 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/inline_response_200_12'
+                $ref: '#/components/schemas/inline_response_200_14'
         "402":
           $ref: '#/paths/~1invoice~1%7BinvoiceId%7D~1charge/post/responses/200'
         "404":
           description: Null response
-          content:
-            application/json:
-              schema:
-                type: string
-                nullable: true
-                x-content-type: application/json
         default:
           description: unexpected error
           content:
@@ -1822,6 +1778,28 @@ paths:
                 type: string
                 format: binary
                 x-content-type: application/pdf
+  /events:
+    post:
+      tags:
+      - Usage
+      summary: Create Event
+      description: Creates an event that is used for usage billing
+      operationId: createEvent
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Event'
+        required: true
+      responses:
+        "201":
+          description: Null response
+        default:
+          description: unexpected error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
 components:
   schemas:
     Address:
@@ -1915,8 +1893,19 @@ components:
           description: Defaults to 'default' if not sent.
           nullable: true
           example: default
+        invoice_format:
+          type: string
+          description: Choice between 'pdf' and 'xrechnung'. <strong>Since 2024.02.01</strong>
+          nullable: true
+          example: pdf
+          enum:
+          - pdf
+          - xrechnung
+        marketing_opt_in:
+          type: boolean
+          description: If the customer has opted in for marketing
+          nullable: true
       example:
-        reference: internal-id
         address:
           country: GB
           street_line_one: street_line_one
@@ -1925,16 +1914,19 @@ components:
           postcode: postcode
           street_line_two: street_line_two
           region: region
+        invoice_format: pdf
+        standard_tax_rate: "15"
+        type: business
+        locale: en
+        digital_tax_rate: "19.5"
+        reference: internal-id
         tax_number: GB459324
         billing_type: card
         external_reference: external_reference
-        standard_tax_rate: "15"
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        type: business
-        locale: en
         brand: default
+        marketing_opt_in: true
         email: iain.cambridge@example.org
-        digital_tax_rate: "19.5"
     Error:
       required:
       - code
@@ -2035,10 +2027,29 @@ components:
         public:
           type: boolean
           nullable: true
+        metric:
+          $ref: '#/components/schemas/Metric'
       example:
         schedule: week
         amount: 1000
         public: true
+        metric:
+          code: code_one
+          name: Revenue
+          aggregation_property: aggregation_property
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          filters:
+          - code: cool_stuff
+            name: Cool Stuff
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: inclusive
+            value: is_totally_cool
+          - code: cool_stuff
+            name: Cool Stuff
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            type: inclusive
+            value: is_totally_cool
+          aggregation_method: count
         recurring: false
         including_tax: true
         external_reference: external_reference
@@ -2094,11 +2105,16 @@ components:
           type: string
         child_external_reference:
           type: string
+        metadata:
+          type: object
         price:
           $ref: '#/components/schemas/Price'
         plan:
           $ref: '#/components/schemas/SubscriptionPlan'
       example:
+        metadata: {}
+        main_external_reference: main_external_reference
+        created_at: created_at
         schedule: month
         valid_until: valid_until
         updated_at: updated_at
@@ -2107,13 +2123,28 @@ components:
           schedule: week
           amount: 1000
           public: true
+          metric:
+            code: code_one
+            name: Revenue
+            aggregation_property: aggregation_property
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            filters:
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            aggregation_method: count
           recurring: false
           including_tax: true
           external_reference: external_reference
           currency: EUR
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-        main_external_reference: main_external_reference
-        created_at: created_at
         child_external_reference: child_external_reference
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         plan:
@@ -2370,7 +2401,6 @@ components:
           currency: currency
           tax_rate: 7.061401241503109
         customer:
-          reference: internal-id
           address:
             country: GB
             street_line_one: street_line_one
@@ -2379,16 +2409,19 @@ components:
             postcode: postcode
             street_line_two: street_line_two
             region: region
+          invoice_format: pdf
+          standard_tax_rate: "15"
+          type: business
+          locale: en
+          digital_tax_rate: "19.5"
+          reference: internal-id
           tax_number: GB459324
           billing_type: card
           external_reference: external_reference
-          standard_tax_rate: "15"
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          type: business
-          locale: en
           brand: default
+          marketing_opt_in: true
           email: iain.cambridge@example.org
-          digital_tax_rate: "19.5"
     Refund:
       type: object
       properties:
@@ -2438,7 +2471,6 @@ components:
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         status: started
         customer:
-          reference: internal-id
           address:
             country: GB
             street_line_one: street_line_one
@@ -2447,16 +2479,19 @@ components:
             postcode: postcode
             street_line_two: street_line_two
             region: region
+          invoice_format: pdf
+          standard_tax_rate: "15"
+          type: business
+          locale: en
+          digital_tax_rate: "19.5"
+          reference: internal-id
           tax_number: GB459324
           billing_type: card
           external_reference: external_reference
-          standard_tax_rate: "15"
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          type: business
-          locale: en
           brand: default
+          marketing_opt_in: true
           email: iain.cambridge@example.org
-          digital_tax_rate: "19.5"
     BillingAdmin:
       type: object
       properties:
@@ -2494,6 +2529,150 @@ components:
         code:
           type: string
           example: vouch50
+    Event:
+      required:
+      - code
+      - event_id
+      - subscription
+      - value
+      type: object
+      properties:
+        event_id:
+          type: string
+          format: uuid
+        subscription:
+          type: string
+          format: uuid
+        properties:
+          type: object
+        value:
+          type: float
+          example: 1
+        code:
+          type: string
+          example: code_one
+    Metric:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Revenue
+        code:
+          type: string
+          example: code_one
+        aggregation_method:
+          type: string
+          enum:
+          - count
+          - sum
+          - latest
+          - unique_count
+          - max
+        aggregation_property:
+          type: string
+          nullable: true
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricFilter'
+      example:
+        code: code_one
+        name: Revenue
+        aggregation_property: aggregation_property
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        filters:
+        - code: cool_stuff
+          name: Cool Stuff
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: inclusive
+          value: is_totally_cool
+        - code: cool_stuff
+          name: Cool Stuff
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+          type: inclusive
+          value: is_totally_cool
+        aggregation_method: count
+    MetricFilter:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Cool Stuff
+        code:
+          type: string
+          example: cool_stuff
+        value:
+          type: string
+          example: is_totally_cool
+        type:
+          type: string
+          enum:
+          - inclusive
+          - exclusive
+      example:
+        code: cool_stuff
+        name: Cool Stuff
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        type: inclusive
+        value: is_totally_cool
+    MetricCost:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the metric that the cost is for
+          example: metric
+        amount:
+          type: integer
+          example: 10000
+        currency:
+          type: string
+          example: USD
+        usage:
+          type: float
+          example: 1434.33
+      example:
+        amount: 10000
+        usage: 1434.33
+        name: metric
+        currency: USD
+    Cost:
+      type: object
+      properties:
+        amount:
+          type: integer
+          example: 10000
+        currency:
+          type: string
+          example: USD
+      example:
+        amount: 10000
+        currency: USD
+    UsageLimit:
+      required:
+      - name
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        amount:
+          type: integer
+        action:
+          type: string
+          enum:
+          - WARNING
+          - DISABLE
+      example:
+        amount: 0
+        action: WARNING
+        id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
     inline_response_200:
       type: object
       properties:
@@ -2508,8 +2687,7 @@ components:
           format: uuid
       example:
         data:
-        - reference: internal-id
-          address:
+        - address:
             country: GB
             street_line_one: street_line_one
             city: city
@@ -2517,18 +2695,20 @@ components:
             postcode: postcode
             street_line_two: street_line_two
             region: region
+          invoice_format: pdf
+          standard_tax_rate: "15"
+          type: business
+          locale: en
+          digital_tax_rate: "19.5"
+          reference: internal-id
           tax_number: GB459324
           billing_type: card
           external_reference: external_reference
-          standard_tax_rate: "15"
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          type: business
-          locale: en
           brand: default
+          marketing_opt_in: true
           email: iain.cambridge@example.org
-          digital_tax_rate: "19.5"
-        - reference: internal-id
-          address:
+        - address:
             country: GB
             street_line_one: street_line_one
             city: city
@@ -2536,16 +2716,19 @@ components:
             postcode: postcode
             street_line_two: street_line_two
             region: region
+          invoice_format: pdf
+          standard_tax_rate: "15"
+          type: business
+          locale: en
+          digital_tax_rate: "19.5"
+          reference: internal-id
           tax_number: GB459324
           billing_type: card
           external_reference: external_reference
-          standard_tax_rate: "15"
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          type: business
-          locale: en
           brand: default
+          marketing_opt_in: true
           email: iain.cambridge@example.org
-          digital_tax_rate: "19.5"
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
     inline_response_400:
@@ -2558,6 +2741,28 @@ components:
           additionalProperties:
             type: string
     inline_response_200_1:
+      type: object
+      properties:
+        costs:
+          type: array
+          items:
+            $ref: '#/components/schemas/MetricCost'
+        cost:
+          $ref: '#/components/schemas/Cost'
+      example:
+        costs:
+        - amount: 10000
+          usage: 1434.33
+          name: metric
+          currency: USD
+        - amount: 10000
+          usage: 1434.33
+          name: metric
+          currency: USD
+        cost:
+          amount: 10000
+          currency: USD
+    inline_response_200_2:
       type: object
       properties:
         limits:
@@ -2588,7 +2793,7 @@ components:
             description: Send your enemies glitter bombs
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           limit: 30
-    inline_response_200_2:
+    inline_response_200_3:
       type: object
       properties:
         data:
@@ -2614,7 +2819,6 @@ components:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           status: started
           customer:
-            reference: internal-id
             address:
               country: GB
               street_line_one: street_line_one
@@ -2623,16 +2827,19 @@ components:
               postcode: postcode
               street_line_two: street_line_two
               region: region
+            invoice_format: pdf
+            standard_tax_rate: "15"
+            type: business
+            locale: en
+            digital_tax_rate: "19.5"
+            reference: internal-id
             tax_number: GB459324
             billing_type: card
             external_reference: external_reference
-            standard_tax_rate: "15"
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            type: business
-            locale: en
             brand: default
+            marketing_opt_in: true
             email: iain.cambridge@example.org
-            digital_tax_rate: "19.5"
         - amount: 1000
           external_reference: external_reference
           billing_admin:
@@ -2645,7 +2852,6 @@ components:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           status: started
           customer:
-            reference: internal-id
             address:
               country: GB
               street_line_one: street_line_one
@@ -2654,19 +2860,22 @@ components:
               postcode: postcode
               street_line_two: street_line_two
               region: region
+            invoice_format: pdf
+            standard_tax_rate: "15"
+            type: business
+            locale: en
+            digital_tax_rate: "19.5"
+            reference: internal-id
             tax_number: GB459324
             billing_type: card
             external_reference: external_reference
-            standard_tax_rate: "15"
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            type: business
-            locale: en
             brand: default
+            marketing_opt_in: true
             email: iain.cambridge@example.org
-            digital_tax_rate: "19.5"
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_3:
+    inline_response_200_4:
       type: object
       properties:
         data:
@@ -2684,7 +2893,44 @@ components:
         - "{}"
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_4:
+    inline_response_200_5:
+      type: object
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/UsageLimit'
+        has_more:
+          type: boolean
+        last_key:
+          type: string
+          format: uuid
+      example:
+        data:
+        - amount: 0
+          action: WARNING
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        - amount: 0
+          action: WARNING
+          id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+        has_more: true
+        last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+    customerId_uasgelimit_body:
+      required:
+      - action
+      - amount
+      type: object
+      properties:
+        amount:
+          type: integer
+          example: 2000
+        action:
+          type: string
+          example: WARNING
+          enum:
+          - WARNING
+          - DISABLE
+    inline_response_200_6:
       type: object
       properties:
         data:
@@ -2732,7 +2978,6 @@ components:
             currency: currency
             tax_rate: 7.061401241503109
           customer:
-            reference: internal-id
             address:
               country: GB
               street_line_one: street_line_one
@@ -2741,16 +2986,19 @@ components:
               postcode: postcode
               street_line_two: street_line_two
               region: region
+            invoice_format: pdf
+            standard_tax_rate: "15"
+            type: business
+            locale: en
+            digital_tax_rate: "19.5"
+            reference: internal-id
             tax_number: GB459324
             billing_type: card
             external_reference: external_reference
-            standard_tax_rate: "15"
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            type: business
-            locale: en
             brand: default
+            marketing_opt_in: true
             email: iain.cambridge@example.org
-            digital_tax_rate: "19.5"
         - tax_total: 0
           biller_address:
             country: GB
@@ -2785,7 +3033,6 @@ components:
             currency: currency
             tax_rate: 7.061401241503109
           customer:
-            reference: internal-id
             address:
               country: GB
               street_line_one: street_line_one
@@ -2794,19 +3041,22 @@ components:
               postcode: postcode
               street_line_two: street_line_two
               region: region
+            invoice_format: pdf
+            standard_tax_rate: "15"
+            type: business
+            locale: en
+            digital_tax_rate: "19.5"
+            reference: internal-id
             tax_number: GB459324
             billing_type: card
             external_reference: external_reference
-            standard_tax_rate: "15"
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            type: business
-            locale: en
             brand: default
+            marketing_opt_in: true
             email: iain.cambridge@example.org
-            digital_tax_rate: "19.5"
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_5:
+    inline_response_200_7:
       type: object
       properties:
         data:
@@ -2879,6 +3129,9 @@ components:
         deny_trial:
           type: bool
           example: true
+        metadata:
+          type: object
+          description: Any metadata you want to add to a subscription
     subscription_trial_body:
       required:
       - subscription_plan
@@ -2901,7 +3154,7 @@ components:
           type: integer
           nullable: true
           example: 1
-    inline_response_200_6:
+    inline_response_200_8:
       type: object
       properties:
         data:
@@ -2915,7 +3168,10 @@ components:
           format: uuid
       example:
         data:
-        - schedule: month
+        - metadata: {}
+          main_external_reference: main_external_reference
+          created_at: created_at
+          schedule: month
           valid_until: valid_until
           updated_at: updated_at
           seat_number: 1
@@ -2923,13 +3179,28 @@ components:
             schedule: week
             amount: 1000
             public: true
+            metric:
+              code: code_one
+              name: Revenue
+              aggregation_property: aggregation_property
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              filters:
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              aggregation_method: count
             recurring: false
             including_tax: true
             external_reference: external_reference
             currency: EUR
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          main_external_reference: main_external_reference
-          created_at: created_at
           child_external_reference: child_external_reference
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           plan:
@@ -2978,7 +3249,10 @@ components:
               limit: 30
           ended_at: ended_at
           status: status
-        - schedule: month
+        - metadata: {}
+          main_external_reference: main_external_reference
+          created_at: created_at
+          schedule: month
           valid_until: valid_until
           updated_at: updated_at
           seat_number: 1
@@ -2986,13 +3260,28 @@ components:
             schedule: week
             amount: 1000
             public: true
+            metric:
+              code: code_one
+              name: Revenue
+              aggregation_property: aggregation_property
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              filters:
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              aggregation_method: count
             recurring: false
             including_tax: true
             external_reference: external_reference
             currency: EUR
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          main_external_reference: main_external_reference
-          created_at: created_at
           child_external_reference: child_external_reference
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           plan:
@@ -3043,13 +3332,13 @@ components:
           status: status
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_7:
+    inline_response_200_9:
       type: object
       properties:
         data:
           type: array
           items:
-            $ref: '#/components/schemas/inline_response_200_7_data'
+            $ref: '#/components/schemas/inline_response_200_9_data'
         has_more:
           type: boolean
         last_key:
@@ -3071,7 +3360,6 @@ components:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           status: pending
           customer:
-            reference: internal-id
             address:
               country: GB
               street_line_one: street_line_one
@@ -3080,16 +3368,19 @@ components:
               postcode: postcode
               street_line_two: street_line_two
               region: region
+            invoice_format: pdf
+            standard_tax_rate: "15"
+            type: business
+            locale: en
+            digital_tax_rate: "19.5"
+            reference: internal-id
             tax_number: GB459324
             billing_type: card
             external_reference: external_reference
-            standard_tax_rate: "15"
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            type: business
-            locale: en
             brand: default
+            marketing_opt_in: true
             email: iain.cambridge@example.org
-            digital_tax_rate: "19.5"
         - receipts:
           - valid: true
             created_at: created_at
@@ -3104,7 +3395,6 @@ components:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
           status: pending
           customer:
-            reference: internal-id
             address:
               country: GB
               street_line_one: street_line_one
@@ -3113,19 +3403,22 @@ components:
               postcode: postcode
               street_line_two: street_line_two
               region: region
+            invoice_format: pdf
+            standard_tax_rate: "15"
+            type: business
+            locale: en
+            digital_tax_rate: "19.5"
+            reference: internal-id
             tax_number: GB459324
             billing_type: card
             external_reference: external_reference
-            standard_tax_rate: "15"
             id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-            type: business
-            locale: en
             brand: default
+            marketing_opt_in: true
             email: iain.cambridge@example.org
-            digital_tax_rate: "19.5"
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_8:
+    inline_response_200_10:
       type: object
       properties:
         data:
@@ -3155,7 +3448,7 @@ components:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_9:
+    inline_response_200_11:
       type: object
       properties:
         data:
@@ -3172,6 +3465,23 @@ components:
         - schedule: week
           amount: 1000
           public: true
+          metric:
+            code: code_one
+            name: Revenue
+            aggregation_property: aggregation_property
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            filters:
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            aggregation_method: count
           recurring: false
           including_tax: true
           external_reference: external_reference
@@ -3180,6 +3490,23 @@ components:
         - schedule: week
           amount: 1000
           public: true
+          metric:
+            code: code_one
+            name: Revenue
+            aggregation_property: aggregation_property
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            filters:
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            aggregation_method: count
           recurring: false
           including_tax: true
           external_reference: external_reference
@@ -3187,7 +3514,7 @@ components:
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         has_more: true
         last_key: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-    inline_response_200_10:
+    inline_response_200_12:
       type: object
       properties:
         data:
@@ -3297,7 +3624,7 @@ components:
         seats:
           type: integer
           example: 2
-    inline_response_200_11:
+    inline_response_200_13:
       type: object
       properties:
         success:
@@ -3347,8 +3674,8 @@ components:
           type: uuid
     subscriptionId_plan_body:
       required:
+      - plan
       - price
-      - subscription_plan
       - when
       type: object
       properties:
@@ -3464,6 +3791,23 @@ components:
             schedule: week
             amount: 1000
             public: true
+            metric:
+              code: code_one
+              name: Revenue
+              aggregation_property: aggregation_property
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              filters:
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              aggregation_method: count
             recurring: false
             including_tax: true
             external_reference: external_reference
@@ -3523,6 +3867,23 @@ components:
             schedule: week
             amount: 1000
             public: true
+            metric:
+              code: code_one
+              name: Revenue
+              aggregation_property: aggregation_property
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              filters:
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              - code: cool_stuff
+                name: Cool Stuff
+                id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+                type: inclusive
+                value: is_totally_cool
+              aggregation_method: count
             recurring: false
             including_tax: true
             external_reference: external_reference
@@ -3578,7 +3939,6 @@ components:
               limit: 30
           tax_rate: 7.061401241503109
         customer:
-          reference: internal-id
           address:
             country: GB
             street_line_one: street_line_one
@@ -3587,17 +3947,20 @@ components:
             postcode: postcode
             street_line_two: street_line_two
             region: region
+          invoice_format: pdf
+          standard_tax_rate: "15"
+          type: business
+          locale: en
+          digital_tax_rate: "19.5"
+          reference: internal-id
           tax_number: GB459324
           billing_type: card
           external_reference: external_reference
-          standard_tax_rate: "15"
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          type: business
-          locale: en
           brand: default
+          marketing_opt_in: true
           email: iain.cambridge@example.org
-          digital_tax_rate: "19.5"
-    inline_response_200_12:
+    inline_response_200_14:
       type: object
       properties:
         paid:
@@ -3656,7 +4019,7 @@ components:
         description: description
         currency: currency
         tax_rate: 7.061401241503109
-    inline_response_200_7_receipts:
+    inline_response_200_9_receipts:
       type: object
       properties:
         created_at:
@@ -3669,7 +4032,7 @@ components:
         valid: true
         created_at: created_at
         id: id
-    inline_response_200_7_data:
+    inline_response_200_9_data:
       type: object
       properties:
         id:
@@ -3701,7 +4064,7 @@ components:
         receipts:
           type: array
           items:
-            $ref: '#/components/schemas/inline_response_200_7_receipts'
+            $ref: '#/components/schemas/inline_response_200_9_receipts'
       example:
         receipts:
         - valid: true
@@ -3717,7 +4080,6 @@ components:
         id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
         status: pending
         customer:
-          reference: internal-id
           address:
             country: GB
             street_line_one: street_line_one
@@ -3726,16 +4088,19 @@ components:
             postcode: postcode
             street_line_two: street_line_two
             region: region
+          invoice_format: pdf
+          standard_tax_rate: "15"
+          type: business
+          locale: en
+          digital_tax_rate: "19.5"
+          reference: internal-id
           tax_number: GB459324
           billing_type: card
           external_reference: external_reference
-          standard_tax_rate: "15"
           id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
-          type: business
-          locale: en
           brand: default
+          marketing_opt_in: true
           email: iain.cambridge@example.org
-          digital_tax_rate: "19.5"
     inline_response_201_lines:
       type: object
       properties:
@@ -3761,6 +4126,23 @@ components:
           schedule: week
           amount: 1000
           public: true
+          metric:
+            code: code_one
+            name: Revenue
+            aggregation_property: aggregation_property
+            id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+            filters:
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            - code: cool_stuff
+              name: Cool Stuff
+              id: 046b6c7f-0b8a-43b9-b35d-6489e6daee91
+              type: inclusive
+              value: is_totally_cool
+            aggregation_method: count
           recurring: false
           including_tax: true
           external_reference: external_reference
@@ -3824,12 +4206,6 @@ components:
             $ref: '#/components/schemas/Error'
     NullResponse:
       description: Null response
-      content:
-        application/json:
-          schema:
-            type: string
-            nullable: true
-            x-content-type: application/json
   parameters:
     customerId:
       name: customerId

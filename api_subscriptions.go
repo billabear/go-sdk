@@ -32,15 +32,15 @@ Adds seats to a per seat subscription&lt;br&gt;&lt;br&gt;&lt;strong&gt;Since 1.1
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param body
  * @param subscriptionId The id of the subscription to retrieve
-@return InlineResponse20011
+@return InlineResponse20013
 */
-func (a *SubscriptionsApiService) AddSeatsSubscriptions(ctx context.Context, body SeatsAddBody, subscriptionId string) (InlineResponse20011, *http.Response, error) {
+func (a *SubscriptionsApiService) AddSeatsSubscriptions(ctx context.Context, body SeatsAddBody, subscriptionId string) (InlineResponse20013, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse20011
+		localVarReturnValue InlineResponse20013
 	)
 
 	// create path and map variables
@@ -113,7 +113,7 @@ func (a *SubscriptionsApiService) AddSeatsSubscriptions(ctx context.Context, bod
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse20011
+			var v InlineResponse20013
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -143,15 +143,15 @@ Info for a specific subscription
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param body
  * @param subscriptionId The id of the subscription to retrieve
-@return string
+
 */
-func (a *SubscriptionsApiService) CancelSubscription(ctx context.Context, body SubscriptionIdCancelBody, subscriptionId string) (string, *http.Response, error) {
+func (a *SubscriptionsApiService) CancelSubscription(ctx context.Context, body SubscriptionIdCancelBody, subscriptionId string) (*http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue string
+		
 	)
 
 	// create path and map variables
@@ -196,67 +196,40 @@ func (a *SubscriptionsApiService) CancelSubscription(ctx context.Context, body S
 	}
 	r, err := a.client.prepareRequest(ctx, localVarPath, localVarHttpMethod, localVarPostBody, localVarHeaderParams, localVarQueryParams, localVarFormParams, localVarFileName, localVarFileBytes)
 	if err != nil {
-		return localVarReturnValue, nil, err
+		return nil, err
 	}
 
 	localVarHttpResponse, err := a.client.callAPI(r)
 	if err != nil || localVarHttpResponse == nil {
-		return localVarReturnValue, localVarHttpResponse, err
+		return localVarHttpResponse, err
 	}
 
 	localVarBody, err := ioutil.ReadAll(localVarHttpResponse.Body)
 	localVarHttpResponse.Body.Close()
 	if err != nil {
-		return localVarReturnValue, localVarHttpResponse, err
+		return localVarHttpResponse, err
 	}
 
-	if localVarHttpResponse.StatusCode < 300 {
-		// If we succeed, return the data, otherwise pass on to decode error.
-		err = a.client.decode(&localVarReturnValue, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-		if err == nil { 
-			return localVarReturnValue, localVarHttpResponse, err
-		}
-	}
 
 	if localVarHttpResponse.StatusCode >= 300 {
 		newErr := GenericSwaggerError{
 			body: localVarBody,
 			error: localVarHttpResponse.Status,
 		}
-		if localVarHttpResponse.StatusCode == 202 {
-			var v string
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
-		if localVarHttpResponse.StatusCode == 404 {
-			var v string
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
 		if localVarHttpResponse.StatusCode == 0 {
 			var v ModelError
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
+					return localVarHttpResponse, newErr
 				}
 				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
+				return localVarHttpResponse, newErr
 		}
-		return localVarReturnValue, localVarHttpResponse, newErr
+		return localVarHttpResponse, newErr
 	}
 
-	return localVarReturnValue, localVarHttpResponse, nil
+	return localVarHttpResponse, nil
 }
 /*
 SubscriptionsApiService Change Price
@@ -264,15 +237,15 @@ Changes the price being used for a price. Useful for changing pricing schedule o
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param body
  * @param subscriptionId The id of the subscription to retrieve
-@return InlineResponse20011
+@return InlineResponse20013
 */
-func (a *SubscriptionsApiService) ChangeSubscriptionPrice(ctx context.Context, body SubscriptionIdPriceBody, subscriptionId string) (InlineResponse20011, *http.Response, error) {
+func (a *SubscriptionsApiService) ChangeSubscriptionPrice(ctx context.Context, body SubscriptionIdPriceBody, subscriptionId string) (InlineResponse20013, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse20011
+		localVarReturnValue InlineResponse20013
 	)
 
 	// create path and map variables
@@ -345,7 +318,7 @@ func (a *SubscriptionsApiService) ChangeSubscriptionPrice(ctx context.Context, b
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse20011
+			var v InlineResponse20013
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -457,16 +430,6 @@ func (a *SubscriptionsApiService) CreateSubscription(ctx context.Context, body S
 		}
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Subscription
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
-		if localVarHttpResponse.StatusCode == 404 {
-			var v string
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -717,15 +680,15 @@ SubscriptionsApiService List Customer Active Subscriptions
 List all Active customer subscriptions
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param customerId The id of the customer to retrieve
-@return InlineResponse2006
+@return InlineResponse2008
 */
-func (a *SubscriptionsApiService) GetActiveForCustomer(ctx context.Context, customerId string) (InlineResponse2006, *http.Response, error) {
+func (a *SubscriptionsApiService) GetActiveForCustomer(ctx context.Context, customerId string) (InlineResponse2008, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2006
+		localVarReturnValue InlineResponse2008
 	)
 
 	// create path and map variables
@@ -796,7 +759,7 @@ func (a *SubscriptionsApiService) GetActiveForCustomer(ctx context.Context, cust
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2006
+			var v InlineResponse2008
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -825,15 +788,15 @@ SubscriptionsApiService List Customer Subscriptions
 List all customer subscriptions&lt;br&gt;&lt;br&gt;&lt;strong&gt;Since 1.1&lt;/strong&gt;
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param customerId The id of the customer to retrieve
-@return InlineResponse2006
+@return InlineResponse2008
 */
-func (a *SubscriptionsApiService) GetForCustomer(ctx context.Context, customerId string) (InlineResponse2006, *http.Response, error) {
+func (a *SubscriptionsApiService) GetForCustomer(ctx context.Context, customerId string) (InlineResponse2008, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2006
+		localVarReturnValue InlineResponse2008
 	)
 
 	// create path and map variables
@@ -904,7 +867,7 @@ func (a *SubscriptionsApiService) GetForCustomer(ctx context.Context, customerId
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2006
+			var v InlineResponse2008
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -935,7 +898,7 @@ List all subscriptions plans
  * @param optional nil or *SubscriptionsApiListSubscriptionPlansOpts - Optional Parameters:
      * @param "Limit" (optional.Int32) -  How many items to return at one time (max 100)
      * @param "LastKey" (optional.String) -  The key to be used in pagination to say what the last key of the previous page was
-@return InlineResponse20010
+@return InlineResponse20012
 */
 
 type SubscriptionsApiListSubscriptionPlansOpts struct {
@@ -943,13 +906,13 @@ type SubscriptionsApiListSubscriptionPlansOpts struct {
     LastKey optional.String
 }
 
-func (a *SubscriptionsApiService) ListSubscriptionPlans(ctx context.Context, localVarOptionals *SubscriptionsApiListSubscriptionPlansOpts) (InlineResponse20010, *http.Response, error) {
+func (a *SubscriptionsApiService) ListSubscriptionPlans(ctx context.Context, localVarOptionals *SubscriptionsApiListSubscriptionPlansOpts) (InlineResponse20012, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse20010
+		localVarReturnValue InlineResponse20012
 	)
 
 	// create path and map variables
@@ -1025,7 +988,7 @@ func (a *SubscriptionsApiService) ListSubscriptionPlans(ctx context.Context, loc
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse20010
+			var v InlineResponse20012
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -1056,7 +1019,7 @@ List all subscriptions
  * @param optional nil or *SubscriptionsApiListSubscriptionsOpts - Optional Parameters:
      * @param "Limit" (optional.Int32) -  How many items to return at one time (max 100)
      * @param "LastKey" (optional.String) -  The key to be used in pagination to say what the last key of the previous page was
-@return InlineResponse2006
+@return InlineResponse2008
 */
 
 type SubscriptionsApiListSubscriptionsOpts struct {
@@ -1064,13 +1027,13 @@ type SubscriptionsApiListSubscriptionsOpts struct {
     LastKey optional.String
 }
 
-func (a *SubscriptionsApiService) ListSubscriptions(ctx context.Context, localVarOptionals *SubscriptionsApiListSubscriptionsOpts) (InlineResponse2006, *http.Response, error) {
+func (a *SubscriptionsApiService) ListSubscriptions(ctx context.Context, localVarOptionals *SubscriptionsApiListSubscriptionsOpts) (InlineResponse2008, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2006
+		localVarReturnValue InlineResponse2008
 	)
 
 	// create path and map variables
@@ -1146,7 +1109,7 @@ func (a *SubscriptionsApiService) ListSubscriptions(ctx context.Context, localVa
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2006
+			var v InlineResponse2008
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -1176,15 +1139,15 @@ Remove seats to a per seat subscription&lt;br&gt;&lt;br&gt;&lt;strong&gt;Since 1
  * @param ctx context.Context - for authentication, logging, cancellation, deadlines, tracing, etc. Passed from http.Request or context.Background().
  * @param body
  * @param subscriptionId The id of the subscription to retrieve
-@return InlineResponse20011
+@return InlineResponse20013
 */
-func (a *SubscriptionsApiService) RemoveSeatsSubscriptions(ctx context.Context, body SeatsRemoveBody, subscriptionId string) (InlineResponse20011, *http.Response, error) {
+func (a *SubscriptionsApiService) RemoveSeatsSubscriptions(ctx context.Context, body SeatsRemoveBody, subscriptionId string) (InlineResponse20013, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Post")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse20011
+		localVarReturnValue InlineResponse20013
 	)
 
 	// create path and map variables
@@ -1257,7 +1220,7 @@ func (a *SubscriptionsApiService) RemoveSeatsSubscriptions(ctx context.Context, 
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse20011
+			var v InlineResponse20013
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -1374,16 +1337,6 @@ func (a *SubscriptionsApiService) ShowSubscriptionById(ctx context.Context, subs
 				newErr.model = v
 				return localVarReturnValue, localVarHttpResponse, newErr
 		}
-		if localVarHttpResponse.StatusCode == 404 {
-			var v string
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
 		if localVarHttpResponse.StatusCode == 0 {
 			var v ModelError
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
@@ -1487,16 +1440,6 @@ func (a *SubscriptionsApiService) StartTrial(ctx context.Context, body Subscript
 		}
 		if localVarHttpResponse.StatusCode == 201 {
 			var v Subscription
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
-		if localVarHttpResponse.StatusCode == 404 {
-			var v string
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()

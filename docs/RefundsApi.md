@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**ShowRefundById**](RefundsApi.md#ShowRefundById) | **Get** /refund/{refundId} | Detail
 
 # **GetRefundsForCustomer**
-> InlineResponse2002 GetRefundsForCustomer(ctx, customerId, optional)
+> InlineResponse2003 GetRefundsForCustomer(ctx, customerId, optional)
 List Customer Refunds
 
 List Customer Refund
@@ -33,7 +33,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2002**](inline_response_200_2.md)
+[**InlineResponse2003**](inline_response_200_3.md)
 
 ### Authorization
 
@@ -47,7 +47,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ListRefund**
-> InlineResponse2002 ListRefund(ctx, optional)
+> InlineResponse2003 ListRefund(ctx, optional)
 List
 
 List all refund
@@ -69,7 +69,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2002**](inline_response_200_2.md)
+[**InlineResponse2003**](inline_response_200_3.md)
 
 ### Authorization
 

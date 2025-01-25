@@ -24,4 +24,6 @@ type SubscriptionStartBody struct {
 	Currency string `json:"currency,omitempty"`
 	SeatNumbrers int32 `json:"seat_numbrers,omitempty"`
 	DenyTrial bool `json:"deny_trial,omitempty"`
+	// Any metadata you want to add to a subscription
+	Metadata *interface{} `json:"metadata,omitempty"`
 }

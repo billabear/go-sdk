@@ -43,7 +43,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **DeletePaymentDetails**
-> string DeletePaymentDetails(ctx, paymentDetailsId)
+> DeletePaymentDetails(ctx, paymentDetailsId)
 Delete
 
 Delete Payment Details
@@ -57,7 +57,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -71,7 +71,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **DeletePaymentDetailsCustomer**
-> string DeletePaymentDetailsCustomer(ctx, customerId, paymentDetailsId)
+> DeletePaymentDetailsCustomer(ctx, customerId, paymentDetailsId)
 Delete With Customer
 
 Delete Payment Details
@@ -86,7 +86,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -128,7 +128,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ListPaymentDetails**
-> InlineResponse2005 ListPaymentDetails(ctx, customerId)
+> InlineResponse2007 ListPaymentDetails(ctx, customerId)
 List Customer's Payment Details
 
 List all customers <br><br>Added in version 1.1
@@ -142,7 +142,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2005**](inline_response_200_5.md)
+[**InlineResponse2007**](inline_response_200_7.md)
 
 ### Authorization
 
@@ -156,7 +156,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **MakeDefaultPaymentDetails**
-> string MakeDefaultPaymentDetails(ctx, customerId, paymentDetailsId)
+> MakeDefaultPaymentDetails(ctx, customerId, paymentDetailsId)
 Make Default
 
 Delete Payment Details
@@ -171,7 +171,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -185,7 +185,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **MakeDefaultPaymentDetailsCustomer**
-> string MakeDefaultPaymentDetailsCustomer(ctx, customerId, paymentDetailsId)
+> MakeDefaultPaymentDetailsCustomer(ctx, customerId, paymentDetailsId)
 Make Default With Customer
 
 Delete Payment Details
@@ -200,7 +200,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 

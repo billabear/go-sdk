@@ -10,7 +10,7 @@
 package swagger
 
 type InlineResponse2003 struct {
-	Data []Paths1paymentgetresponses200contentapplication1jsonschemapropertiesdataitems `json:"data,omitempty"`
+	Data []Refund `json:"data,omitempty"`
 	HasMore bool `json:"has_more,omitempty"`
 	LastKey string `json:"last_key,omitempty"`
 }

@@ -35,7 +35,7 @@ List Customer Refund
      * @param "Limit" (optional.Int32) -  How many items to return at one time (max 100)
      * @param "LastKey" (optional.String) -  The key to be used in pagination to say what the last key of the previous page was
      * @param "Name" (optional.String) -  The name to search for
-@return InlineResponse2002
+@return InlineResponse2003
 */
 
 type RefundsApiGetRefundsForCustomerOpts struct {
@@ -44,13 +44,13 @@ type RefundsApiGetRefundsForCustomerOpts struct {
     Name optional.String
 }
 
-func (a *RefundsApiService) GetRefundsForCustomer(ctx context.Context, customerId string, localVarOptionals *RefundsApiGetRefundsForCustomerOpts) (InlineResponse2002, *http.Response, error) {
+func (a *RefundsApiService) GetRefundsForCustomer(ctx context.Context, customerId string, localVarOptionals *RefundsApiGetRefundsForCustomerOpts) (InlineResponse2003, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2002
+		localVarReturnValue InlineResponse2003
 	)
 
 	// create path and map variables
@@ -130,7 +130,7 @@ func (a *RefundsApiService) GetRefundsForCustomer(ctx context.Context, customerI
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2002
+			var v InlineResponse2003
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -162,7 +162,7 @@ List all refund
      * @param "Limit" (optional.Int32) -  How many items to return at one time (max 100)
      * @param "LastKey" (optional.String) -  The key to be used in pagination to say what the last key of the previous page was
      * @param "Name" (optional.String) -  The name to search for
-@return InlineResponse2002
+@return InlineResponse2003
 */
 
 type RefundsApiListRefundOpts struct {
@@ -171,13 +171,13 @@ type RefundsApiListRefundOpts struct {
     Name optional.String
 }
 
-func (a *RefundsApiService) ListRefund(ctx context.Context, localVarOptionals *RefundsApiListRefundOpts) (InlineResponse2002, *http.Response, error) {
+func (a *RefundsApiService) ListRefund(ctx context.Context, localVarOptionals *RefundsApiListRefundOpts) (InlineResponse2003, *http.Response, error) {
 	var (
 		localVarHttpMethod = strings.ToUpper("Get")
 		localVarPostBody   interface{}
 		localVarFileName   string
 		localVarFileBytes  []byte
-		localVarReturnValue InlineResponse2002
+		localVarReturnValue InlineResponse2003
 	)
 
 	// create path and map variables
@@ -256,7 +256,7 @@ func (a *RefundsApiService) ListRefund(ctx context.Context, localVarOptionals *R
 			error: localVarHttpResponse.Status,
 		}
 		if localVarHttpResponse.StatusCode == 200 {
-			var v InlineResponse2002
+			var v InlineResponse2003
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()
@@ -365,16 +365,6 @@ func (a *RefundsApiService) ShowRefundById(ctx context.Context, refundId string)
 		}
 		if localVarHttpResponse.StatusCode == 200 {
 			var v Refund
-			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
-				if err != nil {
-					newErr.error = err.Error()
-					return localVarReturnValue, localVarHttpResponse, newErr
-				}
-				newErr.model = v
-				return localVarReturnValue, localVarHttpResponse, newErr
-		}
-		if localVarHttpResponse.StatusCode == 404 {
-			var v string
 			err = a.client.decode(&v, localVarBody, localVarHttpResponse.Header.Get("Content-Type"));
 				if err != nil {
 					newErr.error = err.Error()

@@ -9,7 +9,7 @@ Method | HTTP request | Description
 [**GetInvoicesForCustomer**](InvoicesApi.md#GetInvoicesForCustomer) | **Get** /customer/{customerId}/invoices | List Customer Invoices
 
 # **ChargeInvoice**
-> InlineResponse20012 ChargeInvoice(ctx, invoiceId)
+> InlineResponse20014 ChargeInvoice(ctx, invoiceId)
 Charge Invoice
 
 Attempts to charge a card that is on file for the invoice amount
@@ -23,7 +23,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse20012**](inline_response_200_12.md)
+[**InlineResponse20014**](inline_response_200_14.md)
 
 ### Authorization
 
@@ -65,7 +65,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **GetInvoicesForCustomer**
-> InlineResponse2004 GetInvoicesForCustomer(ctx, customerId)
+> InlineResponse2006 GetInvoicesForCustomer(ctx, customerId)
 List Customer Invoices
 
 List Customer Invoices
@@ -79,7 +79,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2004**](inline_response_200_4.md)
+[**InlineResponse2006**](inline_response_200_6.md)
 
 ### Authorization
 

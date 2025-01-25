@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**Data** | [**[]SubscriptionPlan**](SubscriptionPlan.md) |  | [optional] [default to null]
+**Data** | [**[]Product**](Product.md) |  | [optional] [default to null]
 **HasMore** | **bool** |  | [optional] [default to null]
 **LastKey** | **string** |  | [optional] [default to null]
 

@@ -10,7 +10,7 @@ Method | HTTP request | Description
 [**UpdateProduct**](ProductsApi.md#UpdateProduct) | **Put** /product/{productId} | Update
 
 # **CreateProduct**
-> string CreateProduct(ctx, body)
+> CreateProduct(ctx, body)
 Create
 
 Create a product
@@ -24,7 +24,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-**string**
+ (empty response body)
 
 ### Authorization
 
@@ -38,7 +38,7 @@ Name | Type | Description  | Notes
 [[Back to top]](#) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to Model list]](../README.md#documentation-for-models) [[Back to README]](../README.md)
 
 # **ListProduct**
-> InlineResponse2008 ListProduct(ctx, optional)
+> InlineResponse20010 ListProduct(ctx, optional)
 List
 
 List all products
@@ -60,7 +60,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**InlineResponse2008**](inline_response_200_8.md)
+[**InlineResponse20010**](inline_response_200_10.md)
 
 ### Authorization
 

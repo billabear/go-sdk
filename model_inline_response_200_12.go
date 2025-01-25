@@ -10,6 +10,7 @@
 package swagger
 
 type InlineResponse20012 struct {
-	Paid bool `json:"paid,omitempty"`
-	FailureReason string `json:"failure_reason,omitempty"`
+	Data []SubscriptionPlan `json:"data,omitempty"`
+	HasMore bool `json:"has_more,omitempty"`
+	LastKey string `json:"last_key,omitempty"`
 }
